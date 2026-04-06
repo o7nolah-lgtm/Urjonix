@@ -30,10 +30,7 @@ export function Footer() {
                 marginBottom: '1rem',
               }}
             >
-              <svg width="28" height="28" viewBox="0 0 36 36" fill="none">
-                <polygon points="18,2 34,11 34,25 18,34 2,25 2,11" stroke="#D4AF37" strokeWidth="1.5" fill="none" />
-                <circle cx="18" cy="18" r="3.5" fill="#D4AF37" />
-              </svg>
+              <img src="/logo.png" alt="Urjionix logo" style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
               <span
                 style={{
                   fontFamily: '"Inter Tight", sans-serif',

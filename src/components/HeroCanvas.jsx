@@ -21,26 +21,33 @@ const VERIFY_RATE   = 0.80
 const rnd  = (a, b) => a + Math.random() * (b - a)
 const rndI = (a, b) => Math.floor(rnd(a, b))
 
+// ── Gate zone (matches drawScene geometry) ────────────────────────────────────
+// vpX = W*0.5, postW = W*0.24  →  gate spans W*0.26 … W*0.74
+// We expose a helper that returns the gate x-bounds for a given canvas width.
+function gateZone(W) {
+  return { left: W * 0.26, right: W * 0.74 }
+}
+
 // ── Person states ─────────────────────────────────────────────────────────────
-// 'appearing'  → box is drawing itself (boxT 0→1), no scan yet
-// 'scanning'   → box drawn, AI is actively scanning (scanT 0→1, shows progress %)
-// 'verified'   → scan complete, person is in database  → gold box + VERIFIED
-// 'unknown'    → scan complete, not in database        → dim silver box + UNKNOWN
-function spawnPerson(W, H, xOffset = 0) {
+// 'approaching' → walking toward gate, camera sees them (box draws), no scan yet
+// 'scanning'    → inside gate zone, AI actively scanning (scanT 0→1, sweep line)
+// 'verified'    → scan complete + in database  → gold box  + VERIFIED
+// 'unknown'     → scan complete + not in db    → dim box   + NOT IN DATABASE
+function spawnPerson(W, H) {
   return {
-    id:          rndI(10000, 99999),
-    x:           rnd(-80, -40) + xOffset,
-    y:           rnd(H * 0.36, H * 0.58),
-    vx:          rnd(0.20, 0.42),
-    vy:          rnd(-0.03, 0.03),
-    w:           rnd(38, 52),
-    h:           rnd(78, 108),
-    conf:        rnd(94.8, 99.9).toFixed(1),   // revealed only after scan
-    willVerify:  Math.random() < VERIFY_RATE,
-    state:       'appearing',
-    boxT:        0,   // 0→1 box draw animation
-    scanT:       0,   // 0→1 scan progress
-    alpha:       0,
+    id:         rndI(10000, 99999),
+    x:          rnd(-80, -40),
+    y:          rnd(H * 0.36, H * 0.58),
+    vx:         rnd(0.20, 0.42),
+    vy:         rnd(-0.03, 0.03),
+    w:          rnd(38, 52),
+    h:          rnd(78, 108),
+    conf:       rnd(94.8, 99.9).toFixed(1),  // revealed only after scan completes
+    willVerify: Math.random() < VERIFY_RATE,
+    state:      'approaching',
+    boxT:       0,   // 0→1 corner-bracket draw animation
+    scanT:      0,   // 0→1 scan progress (only advances inside gate)
+    alpha:      0,
   }
 }
 
@@ -307,7 +314,7 @@ function drawParticles(ctx, particles) {
 
 function drawHUD(ctx, persons, w, h, t) {
   const verified  = persons.filter((p) => p.state === 'verified').length
-  const scanning  = persons.filter((p) => p.state === 'scanning').length
+  const inGate    = persons.filter((p) => p.state === 'scanning').length
   const active    = persons.filter((p) => p.alpha > 0.3).length
 
   ctx.save()
@@ -317,7 +324,7 @@ function drawHUD(ctx, persons, w, h, t) {
   const rows = [
     ['SYS.STATUS', 'OPERATIONAL'],
     ['IN FRAME',   String(active).padStart(2, '0')],
-    ['SCANNING',   String(scanning).padStart(2, '0')],
+    ['IN GATE',    String(inGate).padStart(2, '0')],
     ['VERIFIED',   String(verified).padStart(2, '0')],
     ['LATENCY',    `${(11 + Math.sin(t) * 0.4).toFixed(1)} ms`],
     ['SYNC',       'ACTIVE'],
@@ -361,20 +368,25 @@ export function HeroCanvas() {
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
 
-    // Stagger initial persons across the screen so they're mid-walk already
+    // Pre-seed persons at various positions so the scene looks live on load
+    const gate0 = gateZone(canvas.width)
     for (let i = 0; i < 5; i++) {
-      const p   = spawnPerson(canvas.width, canvas.height)
-      // Space them out horizontally so they don't all pile up at the same x
-      p.x       = rnd(canvas.width * 0.05, canvas.width * 0.75)
-      p.alpha   = rnd(0.4, 1)
-      p.boxT    = 1  // box already drawn
-      // Pick a random state that makes sense given position
-      const progress = p.x / canvas.width
-      if (progress < 0.25) {
-        p.state = 'scanning'; p.scanT = rnd(0.1, 0.7)
+      const p  = spawnPerson(canvas.width, canvas.height)
+      p.x      = rnd(canvas.width * 0.04, canvas.width * 0.78)
+      p.alpha  = rnd(0.5, 1)
+      const cx = p.x + p.w / 2
+      if (cx < gate0.left - 80) {
+        // still approaching, no box yet
+        p.state = 'approaching'; p.boxT = 0
+      } else if (cx < gate0.left) {
+        // just before gate — box drawing
+        p.state = 'approaching'; p.boxT = rnd(0.3, 0.9)
+      } else if (cx <= gate0.right) {
+        // inside gate — mid-scan
+        p.state = 'scanning'; p.boxT = 1; p.scanT = rnd(0.1, 0.8)
       } else {
-        p.state = p.willVerify ? 'verified' : 'unknown'
-        p.scanT = 1
+        // past gate — resolved
+        p.state = p.willVerify ? 'verified' : 'unknown'; p.boxT = 1; p.scanT = 1
       }
       state.persons.push(p)
     }
@@ -421,17 +433,27 @@ export function HeroCanvas() {
         p.alpha = Math.min(1, p.alpha + dt * 0.6)
 
         // STATE MACHINE ──────────────────────────────────────────────────────
-        if (p.state === 'appearing') {
-          // Animate box drawing
-          p.boxT = Math.min(1, p.boxT + dt * 1.4)
-          // Once box is fully drawn, start scanning
-          if (p.boxT >= 1) p.state = 'scanning'
+        const gate      = gateZone(W)
+        const personCX  = p.x + p.w / 2  // person centre x
+        const inGate    = personCX >= gate.left && personCX <= gate.right
+
+        if (p.state === 'approaching') {
+          // Camera sees person ~80px before gate — start drawing box
+          if (personCX >= gate.left - 80) {
+            p.boxT = Math.min(1, p.boxT + dt * 1.6)
+          }
+          // Transition to scanning the moment they step into the gate zone
+          if (inGate && p.boxT >= 1) {
+            p.state = 'scanning'
+          }
         }
 
         if (p.state === 'scanning') {
-          // Advance scan progress
-          p.scanT = Math.min(1, p.scanT + dt / SCAN_DURATION)
-          // Scan complete → resolve to verified or unknown
+          // Only advance scan while person is still inside the gate zone
+          if (inGate) {
+            p.scanT = Math.min(1, p.scanT + dt / SCAN_DURATION)
+          }
+          // Scan completes → resolve result
           if (p.scanT >= 1) {
             p.state = p.willVerify ? 'verified' : 'unknown'
           }

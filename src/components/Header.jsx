@@ -51,24 +51,11 @@ export function Header() {
       >
         {/* ── Logo ── */}
         <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
-          {/* Geometric logo mark */}
-          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
-            <polygon
-              points="18,2 34,11 34,25 18,34 2,25 2,11"
-              stroke="#D4AF37"
-              strokeWidth="1.5"
-              fill="none"
-            />
-            <polygon
-              points="18,8 28,14 28,22 18,28 8,22 8,14"
-              stroke="rgba(212,175,55,0.45)"
-              strokeWidth="1"
-              fill="rgba(212,175,55,0.04)"
-            />
-            <circle cx="18" cy="18" r="3.5" fill="#D4AF37" />
-            <line x1="18" y1="2"  x2="18" y2="8"  stroke="#D4AF37" strokeWidth="1" />
-            <line x1="18" y1="28" x2="18" y2="34" stroke="#D4AF37" strokeWidth="1" />
-          </svg>
+          <img
+            src="/logo.png"
+            alt="Urjionix logo"
+            style={{ width: '42px', height: '42px', objectFit: 'contain', mixBlendMode: 'lighten' }}
+          />
 
           <div>
             <div
