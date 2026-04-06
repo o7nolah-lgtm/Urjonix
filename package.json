@@ -1,0 +1,24 @@
+{
+  "name": "urjionix",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "preact": "^10.22.0",
+    "wouter": "^3.3.5",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.8.2",
+    "tailwindcss": "^3.4.4",
+    "autoprefixer": "^10.4.19",
+    "postcss": "^8.4.38",
+    "vite": "^5.3.1"
+  }
+}

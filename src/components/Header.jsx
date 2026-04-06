@@ -1,0 +1,259 @@
+import { useState, useEffect, useRef } from 'preact/hooks'
+import { Link, useLocation } from 'wouter'
+
+const NAV_LINKS = [
+  { label: 'Home',         href: '/' },
+  { label: 'Capabilities', href: '/capabilities' },
+  { label: 'Contact',      href: '/contact' },
+]
+
+export function Header() {
+  const [scrolled, setScrolled]   = useState(false)
+  const [menuOpen, setMenuOpen]   = useState(false)
+  const [location]                = useLocation()
+  const headerRef                 = useRef(null)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  // Close mobile menu on route change
+  useEffect(() => setMenuOpen(false), [location])
+
+  return (
+    <header
+      ref={headerRef}
+      style={{
+        position: 'fixed',
+        top: 0, left: 0, right: 0,
+        zIndex: 1000,
+        transition: 'background 0.4s ease, border-color 0.4s ease',
+        background: scrolled
+          ? 'rgba(11,12,14,0.97)'
+          : 'rgba(11,12,14,0.88)',
+        borderBottom: '1px solid rgba(161,161,161,0.1)',
+        backdropFilter: 'blur(16px)',
+        WebkitBackdropFilter: 'blur(16px)',
+      }}
+    >
+      <div
+        style={{
+          maxWidth: '1400px',
+          margin: '0 auto',
+          padding: '0 2rem',
+          height: '72px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        {/* ── Logo ── */}
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Geometric logo mark */}
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <polygon
+              points="18,2 34,11 34,25 18,34 2,25 2,11"
+              stroke="#D4AF37"
+              strokeWidth="1.5"
+              fill="none"
+            />
+            <polygon
+              points="18,8 28,14 28,22 18,28 8,22 8,14"
+              stroke="rgba(212,175,55,0.45)"
+              strokeWidth="1"
+              fill="rgba(212,175,55,0.04)"
+            />
+            <circle cx="18" cy="18" r="3.5" fill="#D4AF37" />
+            <line x1="18" y1="2"  x2="18" y2="8"  stroke="#D4AF37" strokeWidth="1" />
+            <line x1="18" y1="28" x2="18" y2="34" stroke="#D4AF37" strokeWidth="1" />
+          </svg>
+
+          <div>
+            <div
+              style={{
+                fontFamily: '"Inter Tight", sans-serif',
+                fontWeight: 700,
+                fontSize: '1.1rem',
+                letterSpacing: '0.08em',
+                background: 'linear-gradient(135deg, #FBF5A9 0%, #D4AF37 55%, #B59410 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}
+            >
+              URJIONIX
+            </div>
+            <div
+              style={{
+                fontFamily: '"JetBrains Mono", monospace',
+                fontSize: '0.55rem',
+                letterSpacing: '0.22em',
+                color: '#6C6C6C',
+                marginTop: '-2px',
+              }}
+            >
+              BUILD. FAST. SCALE.
+            </div>
+          </div>
+        </Link>
+
+        {/* ── Desktop Nav ── */}
+        <nav style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }} class="hidden md:flex">
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                fontFamily: '"Inter Tight", sans-serif',
+                fontSize: '0.8rem',
+                letterSpacing: '0.06em',
+                textDecoration: 'none',
+                color: location === href ? '#D4AF37' : '#A1A1A1',
+                transition: 'color 0.2s ease',
+                position: 'relative',
+                paddingBottom: '2px',
+              }}
+              onMouseEnter={e => { if (location !== href) e.target.style.color = '#ffffff' }}
+              onMouseLeave={e => { if (location !== href) e.target.style.color = '#A1A1A1' }}
+            >
+              {label}
+              {location === href && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    bottom: '-2px',
+                    left: 0,
+                    right: 0,
+                    height: '1px',
+                    background: '#D4AF37',
+                  }}
+                />
+              )}
+            </Link>
+          ))}
+
+          {/* Edge Tech Robotics CTA */}
+          <a
+            href="https://shop.urjionix.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: '0.65rem',
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              color: '#C0C0C0',
+              border: '1px solid rgba(192,192,192,0.35)',
+              padding: '0.5rem 1.2rem',
+              transition: 'all 0.3s ease',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = '#C0C0C0'
+              e.currentTarget.style.background = 'rgba(192,192,192,0.06)'
+              e.currentTarget.style.color = '#ffffff'
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = 'rgba(192,192,192,0.35)'
+              e.currentTarget.style.background = 'transparent'
+              e.currentTarget.style.color = '#C0C0C0'
+            }}
+          >
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+              <rect x="1" y="1" width="8" height="8" stroke="currentColor" strokeWidth="0.8" />
+              <rect x="3" y="3" width="4" height="4" fill="currentColor" />
+            </svg>
+            Edge Tech Robotics
+          </a>
+        </nav>
+
+        {/* ── Mobile Hamburger ── */}
+        <button
+          class="md:hidden"
+          onClick={() => setMenuOpen(!menuOpen)}
+          style={{
+            background: 'none',
+            border: '1px solid rgba(161,161,161,0.3)',
+            padding: '8px',
+            cursor: 'pointer',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '5px',
+          }}
+          aria-label="Toggle menu"
+        >
+          {[0, 1, 2].map(i => (
+            <span
+              key={i}
+              style={{
+                display: 'block',
+                width: '20px',
+                height: '1px',
+                background: '#D4AF37',
+                transition: 'all 0.3s ease',
+                transform:
+                  menuOpen && i === 0 ? 'rotate(45deg) translateY(6px)' :
+                  menuOpen && i === 2 ? 'rotate(-45deg) translateY(-6px)' :
+                  menuOpen && i === 1 ? 'scaleX(0)' : 'none',
+              }}
+            />
+          ))}
+        </button>
+      </div>
+
+      {/* ── Mobile Menu ── */}
+      {menuOpen && (
+        <div
+          style={{
+            background: 'rgba(11,12,14,0.98)',
+            borderTop: '1px solid rgba(161,161,161,0.12)',
+            padding: '1.5rem 2rem 2rem',
+          }}
+        >
+          {NAV_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              style={{
+                display: 'block',
+                padding: '0.9rem 0',
+                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                fontFamily: '"Inter Tight", sans-serif',
+                fontSize: '1rem',
+                letterSpacing: '0.04em',
+                textDecoration: 'none',
+                color: location === href ? '#D4AF37' : '#A1A1A1',
+              }}
+            >
+              {label}
+            </Link>
+          ))}
+          <a
+            href="https://shop.urjionix.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              display: 'inline-block',
+              marginTop: '1.5rem',
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: '0.65rem',
+              letterSpacing: '0.14em',
+              textTransform: 'uppercase',
+              textDecoration: 'none',
+              color: '#C0C0C0',
+              border: '1px solid rgba(192,192,192,0.35)',
+              padding: '0.6rem 1.2rem',
+            }}
+          >
+            Edge Tech Robotics ↗
+          </a>
+        </div>
+      )}
+    </header>
+  )
+}

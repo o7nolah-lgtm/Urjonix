@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    background-color: #0B0C0E;
+    color: #ffffff;
+    font-family: 'Inter Tight', 'Inter', sans-serif;
+    scroll-behavior: auto; /* Lenis handles smooth scroll */
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: rgba(212, 175, 55, 0.25);
+    color: #D4AF37;
+  }
+
+  ::-webkit-scrollbar { width: 3px; }
+  ::-webkit-scrollbar-track { background: #0B0C0E; }
+  ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 2px; }
+}
+
+@layer components {
+  /* Gold gradient text */
+  .text-gold-gradient {
+    background: linear-gradient(135deg, #FBF5A9 0%, #D4AF37 55%, #B59410 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Mono tech label */
+  .mono-label {
+    font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #A1A1A1;
+  }
+
+  /* Gold shimmer border */
+  .border-gold-dim {
+    border: 1px solid rgba(212, 175, 55, 0.35);
+  }
+
+  .border-silver-dim {
+    border: 1px solid rgba(161, 161, 161, 0.2);
+  }
+
+  /* Glass card */
+  .glass {
+    background: rgba(22, 23, 24, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Gold glow button */
+  .btn-gold {
+    background: transparent;
+    border: 1px solid rgba(212, 175, 55, 0.6);
+    color: #D4AF37;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .btn-gold::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(251,245,169,0.05) 0%, rgba(212,175,55,0.1) 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-gold:hover::before { opacity: 1; }
+  .btn-gold:hover {
+    border-color: rgba(212, 175, 55, 1);
+    box-shadow: 0 0 24px rgba(212, 175, 55, 0.3), 0 0 60px rgba(212, 175, 55, 0.08);
+    color: #FBF5A9;
+  }
+
+  /* Silver button */
+  .btn-silver {
+    background: transparent;
+    border: 1px solid rgba(161, 161, 161, 0.4);
+    color: #C0C0C0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.6rem 1.4rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .btn-silver:hover {
+    border-color: #C0C0C0;
+    background: rgba(192, 192, 192, 0.05);
+    color: #ffffff;
+  }
+
+  /* Section divider line */
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(90deg, #D4AF37, transparent);
+  }
+}
+
+/* GSAP initial hidden state */
+.gsap-hidden {
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Noise texture overlay */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  opacity: 0.4;
+}
