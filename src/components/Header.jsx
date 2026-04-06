@@ -2,16 +2,16 @@ import { useState, useEffect, useRef } from 'preact/hooks'
 import { Link, useLocation } from 'wouter'
 
 const NAV_LINKS = [
-  { label: 'Home',         href: '/' },
+  { label: 'Home', href: '/' },
   { label: 'Capabilities', href: '/capabilities' },
-  { label: 'Contact',      href: '/contact' },
+  { label: 'Contact', href: '/contact' },
 ]
 
 export function Header() {
-  const [scrolled, setScrolled]   = useState(false)
-  const [menuOpen, setMenuOpen]   = useState(false)
-  const [location]                = useLocation()
-  const headerRef                 = useRef(null)
+  const [scrolled, setScrolled] = useState(false)
+  const [menuOpen, setMenuOpen] = useState(false)
+  const [location] = useLocation()
+  const headerRef = useRef(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40)
@@ -123,7 +123,7 @@ export function Header() {
 
           {/* Edge Tech Robotics CTA */}
           <a
-            href="https://shop.urjionix.com"
+            href="https://edgetechrobotics.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -185,8 +185,8 @@ export function Header() {
                 transition: 'all 0.3s ease',
                 transform:
                   menuOpen && i === 0 ? 'rotate(45deg) translateY(6px)' :
-                  menuOpen && i === 2 ? 'rotate(-45deg) translateY(-6px)' :
-                  menuOpen && i === 1 ? 'scaleX(0)' : 'none',
+                    menuOpen && i === 2 ? 'rotate(-45deg) translateY(-6px)' :
+                      menuOpen && i === 1 ? 'scaleX(0)' : 'none',
               }}
             />
           ))}
