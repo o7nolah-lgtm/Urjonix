@@ -159,6 +159,12 @@ function drawHub(ctx, cx, cy, t) {
 }
 
 // ── Person rendering ──────────────────────────────────────────────────────────
+// Only render a person once their centre is actually on canvas
+function isVisible(p, W) {
+  const cx = p.x + p.w / 2
+  return cx > 0 && cx < W + 20
+}
+
 function drawSilhouette(ctx, p) {
   if (p.alpha < 0.02) return
   const { x, y, w: bw, h: bh, alpha } = p
@@ -449,11 +455,8 @@ export function HeroCanvas() {
         }
 
         if (p.state === 'scanning') {
-          // Only advance scan while person is still inside the gate zone
-          if (inGate) {
-            p.scanT = Math.min(1, p.scanT + dt / SCAN_DURATION)
-          }
-          // Scan completes → resolve result
+          // Gate triggers the scan — but once started it always runs to completion
+          p.scanT = Math.min(1, p.scanT + dt / SCAN_DURATION)
           if (p.scanT >= 1) {
             p.state = p.willVerify ? 'verified' : 'unknown'
           }
@@ -461,11 +464,24 @@ export function HeroCanvas() {
 
         // Reset person that walked off-screen
         if (p.x > W + 120) {
-          Object.assign(p, spawnPerson(W, H))
+          const fresh = spawnPerson(W, H)
+          // Pick a Y lane that's not already occupied to avoid label overlap
+          const usedYs = state.persons.filter(o => o !== p).map(o => o.y)
+          const laneH  = (H * 0.58 - H * 0.36) / 5
+          let bestY = fresh.y, bestDist = 0
+          for (let li = 0; li < 5; li++) {
+            const cy = H * 0.36 + laneH * li + laneH / 2
+            const minDist = Math.min(...usedYs.map(uy => Math.abs(uy - cy)), 9999)
+            if (minDist > bestDist) { bestDist = minDist; bestY = cy }
+          }
+          fresh.y = bestY
+          Object.assign(p, fresh)
         }
 
-        drawSilhouette(ctx, p)
-        drawBoundingBox(ctx, p, W)
+        if (isVisible(p, W)) {
+          drawSilhouette(ctx, p)
+          drawBoundingBox(ctx, p, W)
+        }
       })
 
       drawHub(ctx, W * 0.5, H * 0.76, t)
