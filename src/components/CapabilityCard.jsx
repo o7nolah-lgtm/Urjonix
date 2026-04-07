@@ -1,14 +1,11 @@
 export function CapabilityCard({ index, tag, title, description, bullets, visual }) {
   return (
     <div
-      class="gsap-hidden"
+      class="gsap-hidden cap-card-grid"
       style={{
         border: '1px solid rgba(161,161,161,0.1)',
         background: '#161718',
         overflow: 'hidden',
-        display: 'grid',
-        gridTemplateColumns: index % 2 === 0 ? '1fr 1fr' : '1fr 1fr',
-        minHeight: '400px',
         transition: 'border-color 0.4s ease',
       }}
       onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'}
@@ -16,6 +13,7 @@ export function CapabilityCard({ index, tag, title, description, bullets, visual
     >
       {/* Content side */}
       <div
+        class="cap-card-content"
         style={{
           padding: '3rem',
           display: 'flex',
@@ -77,12 +75,13 @@ export function CapabilityCard({ index, tag, title, description, bullets, visual
 
       {/* Visual side */}
       <div
+        class="cap-card-visual"
         style={{
           background: '#0F1012',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          minHeight: '300px',
+          minHeight: '240px',
           order: index % 2 === 0 ? 1 : 0,
           borderLeft:  index % 2 === 0 ? '1px solid rgba(161,161,161,0.08)' : 'none',
           borderRight: index % 2 !== 0 ? '1px solid rgba(161,161,161,0.08)' : 'none',

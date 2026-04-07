@@ -126,8 +126,8 @@ export function Capabilities() {
         style={{
           paddingTop: 'clamp(8rem, 16vw, 12rem)',
           paddingBottom: 'clamp(4rem, 8vw, 6rem)',
-          paddingLeft:  'clamp(2rem, 8vw, 8rem)',
-          paddingRight: 'clamp(2rem, 8vw, 8rem)',
+          paddingLeft:  'clamp(1.5rem, 8vw, 8rem)',
+          paddingRight: 'clamp(1.5rem, 8vw, 8rem)',
           maxWidth: '1400px',
           margin: '0 auto',
           borderBottom: '1px solid rgba(161,161,161,0.08)',

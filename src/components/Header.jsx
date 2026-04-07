@@ -42,52 +42,51 @@ export function Header() {
         style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: '0 2rem',
-          height: '72px',
+          padding: '0 1.25rem',
+          height: '64px',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
+          gap: '1rem',
+          overflow: 'hidden',
         }}
       >
         {/* ── Logo ── */}
-        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <Link href="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
           <img
             src="/logo.png"
             alt="Urjionix logo"
-            style={{ width: '42px', height: '42px', objectFit: 'contain', mixBlendMode: 'lighten' }}
+            style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'lighten', flexShrink: 0 }}
           />
-
           <div>
-            <div
-              style={{
-                fontFamily: '"Inter Tight", sans-serif',
-                fontWeight: 700,
-                fontSize: '1.1rem',
-                letterSpacing: '0.08em',
-                background: 'linear-gradient(135deg, #FBF5A9 0%, #D4AF37 55%, #B59410 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                backgroundClip: 'text',
-              }}
-            >
+            <div style={{
+              fontFamily: '"Inter Tight", sans-serif',
+              fontWeight: 700,
+              fontSize: 'clamp(0.85rem, 2.5vw, 1.1rem)',
+              letterSpacing: '0.08em',
+              background: 'linear-gradient(135deg, #FBF5A9 0%, #D4AF37 55%, #B59410 100%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text',
+              whiteSpace: 'nowrap',
+            }}>
               URJIONIX
             </div>
-            <div
-              style={{
-                fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '0.55rem',
-                letterSpacing: '0.22em',
-                color: '#6C6C6C',
-                marginTop: '-2px',
-              }}
-            >
+            <div class="hide-mobile" style={{
+              fontFamily: '"JetBrains Mono", monospace',
+              fontSize: '0.5rem',
+              letterSpacing: '0.2em',
+              color: '#6C6C6C',
+              marginTop: '-1px',
+              whiteSpace: 'nowrap',
+            }}>
               BUILD. FAST. SCALE.
             </div>
           </div>
         </Link>
 
         {/* ── Desktop Nav ── */}
-        <nav style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }} class="hidden md:flex">
+        <nav class="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: '2.5rem' }}>
           {NAV_LINKS.map(({ label, href }) => (
             <Link
               key={href}
@@ -161,7 +160,7 @@ export function Header() {
 
         {/* ── Mobile Hamburger ── */}
         <button
-          class="md:hidden"
+          class="mobile-burger"
           onClick={() => setMenuOpen(!menuOpen)}
           style={{
             background: 'none',
@@ -208,7 +207,7 @@ export function Header() {
               href={href}
               style={{
                 display: 'block',
-                padding: '0.9rem 0',
+                padding: '1.1rem 0',
                 borderBottom: '1px solid rgba(255,255,255,0.05)',
                 fontFamily: '"Inter Tight", sans-serif',
                 fontSize: '1rem',

@@ -119,6 +119,96 @@
   }
 }
 
+/* ── Responsive layout helpers ───────────────────────────────────────────── */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+.hero-canvas-col {
+  position: relative;
+  border-left: 1px solid rgba(161,161,161,0.08);
+}
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-canvas-col {
+    height: 55vw;
+    min-height: 260px;
+    border-left: none;
+    border-top: 1px solid rgba(161,161,161,0.08);
+  }
+  .hero-text-col {
+    padding: 7rem 1.5rem 2rem !important;
+  }
+}
+
+.cap-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 400px;
+}
+@media (max-width: 768px) {
+  .cap-card-grid {
+    grid-template-columns: 1fr;
+  }
+  .cap-card-visual {
+    order: 0 !important;
+    min-height: 200px;
+    border-left: none !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(161,161,161,0.08);
+  }
+  .cap-card-content {
+    order: 1 !important;
+    padding: 2rem 1.5rem !important;
+  }
+}
+
+.cs-phase-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 4rem;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .cs-phase-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .cs-phase-grid > * {
+    order: unset !important;
+  }
+}
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 4rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .section-px  { padding-left: 1.5rem !important; padding-right: 1.5rem !important; }
+  .hide-mobile { display: none !important; }
+  .desktop-nav { display: none !important; }
+  .mobile-burger { display: flex !important; }
+}
+@media (min-width: 769px) {
+  .mobile-burger { display: none !important; }
+  .mobile-menu-panel { display: none !important; }
+}
+
 /* GSAP initial hidden state */
 .gsap-hidden {
   opacity: 0;

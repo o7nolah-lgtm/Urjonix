@@ -137,13 +137,10 @@ export function Contact() {
         style={{
           maxWidth: '1400px',
           margin: '0 auto',
-          padding: 'clamp(4rem, 8vw, 6rem) clamp(2rem, 8vw, 8rem)',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1.4fr',
-          gap: 'clamp(3rem, 6vw, 8rem)',
-          alignItems: 'start',
+          padding: 'clamp(3rem, 8vw, 6rem) clamp(1.5rem, 8vw, 8rem)',
         }}
       >
+        <div class="contact-grid">
         {/* Left — Info ──────────────────────────────────────── */}
         <div class="gsap-hidden">
           <p
@@ -395,6 +392,7 @@ export function Contact() {
             </form>
           )}
         </div>
+        </div>{/* end contact-grid */}
       </section>
     </main>
   )

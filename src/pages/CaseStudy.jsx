@@ -265,10 +265,8 @@ export function CaseStudy() {
           <div
             key={ph.num}
             class="gsap-hidden"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: i % 2 === 0 ? '1fr 1.1fr' : '1.1fr 1fr',
-              gap: '4rem',
+            class="cs-phase-grid"
+          style={{
               alignItems: 'center',
               marginBottom: '5rem',
               paddingBottom: '5rem',
