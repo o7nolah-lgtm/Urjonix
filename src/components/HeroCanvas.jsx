@@ -33,7 +33,7 @@ function gateZone(W) {
 // 'scanning'    → inside gate zone, AI actively scanning (scanT 0→1, sweep line)
 // 'verified'    → scan complete + in database  → gold box  + VERIFIED
 // 'unknown'     → scan complete + not in db    → dim box   + NOT IN DATABASE
-function spawnPerson(W, H) {
+function spawnPerson(_W, H) {
   return {
     id:         rndI(10000, 99999),
     x:          rnd(-80, -40),
@@ -167,7 +167,7 @@ function isVisible(p, W) {
 
 function drawSilhouette(ctx, p) {
   if (p.alpha < 0.02) return
-  const { x, y, w: bw, h: bh, alpha } = p
+  const { x, y, w: bw, alpha } = p
   const cx = x + bw / 2
   ctx.save(); ctx.globalAlpha = alpha * 0.26; ctx.fillStyle = WHT_A(0.6)
   ctx.beginPath(); ctx.arc(cx, y + 11, 7.5, 0, Math.PI * 2); ctx.fill()
@@ -374,9 +374,12 @@ export function HeroCanvas() {
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
 
+    // Fewer persons on small screens to avoid clutter
+    const maxPersons = canvas.width < 500 ? 2 : canvas.width < 768 ? 3 : 5
+
     // Pre-seed persons at various positions so the scene looks live on load
     const gate0 = gateZone(canvas.width)
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < maxPersons; i++) {
       const p  = spawnPerson(canvas.width, canvas.height)
       p.x      = rnd(canvas.width * 0.04, canvas.width * 0.78)
       p.alpha  = rnd(0.5, 1)
