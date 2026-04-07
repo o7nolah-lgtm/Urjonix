@@ -137,13 +137,14 @@
     min-height: auto;
   }
   .hero-canvas-col {
-    height: 55vw;
-    min-height: 260px;
+    height: 72vw;
+    max-height: 320px;
     border-left: none;
     border-top: 1px solid rgba(161,161,161,0.08);
+    overflow: hidden;
   }
   .hero-text-col {
-    padding: 7rem 1.5rem 2rem !important;
+    padding: 6rem 1.5rem 2rem !important;
   }
 }
 

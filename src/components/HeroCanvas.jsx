@@ -33,20 +33,28 @@ function gateZone(W) {
 // 'scanning'    → inside gate zone, AI actively scanning (scanT 0→1, sweep line)
 // 'verified'    → scan complete + in database  → gold box  + VERIFIED
 // 'unknown'     → scan complete + not in db    → dim box   + NOT IN DATABASE
-function spawnPerson(_W, H) {
+function spawnPerson(_W, H, mobile = false) {
+  // On mobile the canvas is shorter — keep persons in the upper half, away from the hub
+  const yMin = mobile ? H * 0.22 : H * 0.36
+  const yMax = mobile ? H * 0.52 : H * 0.58
+  const wMin = mobile ? 28 : 38
+  const wMax = mobile ? 38 : 52
+  const hMin = mobile ? 55 : 78
+  const hMax = mobile ? 80 : 108
+
   return {
     id:         rndI(10000, 99999),
     x:          rnd(-80, -40),
-    y:          rnd(H * 0.36, H * 0.58),
+    y:          rnd(yMin, yMax),
     vx:         rnd(0.20, 0.42),
-    vy:         rnd(-0.03, 0.03),
-    w:          rnd(38, 52),
-    h:          rnd(78, 108),
-    conf:       rnd(94.8, 99.9).toFixed(1),  // revealed only after scan completes
+    vy:         rnd(-0.02, 0.02),
+    w:          rnd(wMin, wMax),
+    h:          rnd(hMin, hMax),
+    conf:       rnd(94.8, 99.9).toFixed(1),
     willVerify: Math.random() < VERIFY_RATE,
     state:      'approaching',
-    boxT:       0,   // 0→1 corner-bracket draw animation
-    scanT:      0,   // 0→1 scan progress (only advances inside gate)
+    boxT:       0,
+    scanT:      0,
     alpha:      0,
   }
 }
@@ -375,12 +383,13 @@ export function HeroCanvas() {
     ro.observe(canvas)
 
     // Fewer persons on small screens to avoid clutter
+    const isMobile   = canvas.width < 600
     const maxPersons = canvas.width < 500 ? 2 : canvas.width < 768 ? 3 : 5
 
     // Pre-seed persons at various positions so the scene looks live on load
     const gate0 = gateZone(canvas.width)
     for (let i = 0; i < maxPersons; i++) {
-      const p  = spawnPerson(canvas.width, canvas.height)
+      const p  = spawnPerson(canvas.width, canvas.height, isMobile)
       p.x      = rnd(canvas.width * 0.04, canvas.width * 0.78)
       p.alpha  = rnd(0.5, 1)
       const cx = p.x + p.w / 2
@@ -427,6 +436,8 @@ export function HeroCanvas() {
       fog.addColorStop(0, 'rgba(28,22,8,0.3)'); fog.addColorStop(1, 'rgba(0,0,0,0)')
       ctx.fillStyle = fog; ctx.fillRect(0, 0, W, H)
 
+      const mobile = W < 600
+
       drawGrid(ctx, W, H)
       drawScanline(ctx, W, H, t)
       drawScene(ctx, W, H)
@@ -467,7 +478,7 @@ export function HeroCanvas() {
 
         // Reset person that walked off-screen
         if (p.x > W + 120) {
-          const fresh = spawnPerson(W, H)
+          const fresh = spawnPerson(W, H, mobile)
           // Pick a Y lane that's not already occupied to avoid label overlap
           const usedYs = state.persons.filter(o => o !== p).map(o => o.y)
           const laneH  = (H * 0.58 - H * 0.36) / 5
@@ -502,7 +513,7 @@ export function HeroCanvas() {
         }
       })
       drawParticles(ctx, state.particles)
-      drawHUD(ctx, state.persons, W, H, t)
+      if (!mobile) drawHUD(ctx, state.persons, W, H, t)
 
       rafRef.current = requestAnimationFrame(frame)
     }
