@@ -35,8 +35,8 @@ function gateZone(W) {
 // 'unknown'     → scan complete + not in db    → dim box   + NOT IN DATABASE
 function spawnPerson(_W, H, mobile = false) {
   // On mobile the canvas is shorter — keep persons in the upper half, away from the hub
-  const yMin = mobile ? H * 0.22 : H * 0.36
-  const yMax = mobile ? H * 0.52 : H * 0.58
+  const yMin = mobile ? H * 0.22 : H * 0.42
+  const yMax = mobile ? H * 0.52 : H * 0.64
   const wMin = mobile ? 28 : 38
   const wMax = mobile ? 38 : 52
   const hMin = mobile ? 55 : 78
@@ -184,7 +184,7 @@ function drawSilhouette(ctx, p) {
   ctx.restore()
 }
 
-function drawBoundingBox(ctx, p, canvasW) {
+function drawBoundingBox(ctx, p) {
   if (p.alpha < 0.02 || p.boxT < 0.01) return
 
   const { x, y, w: bw, h: bh, boxT, scanT, conf, id, state, alpha } = p
@@ -256,9 +256,8 @@ function drawBoundingBox(ctx, p, canvasW) {
     const line2  = `SCANNING... ${pct}%`
     const lbW    = Math.max(measureText(ctx, line1).width, measureText(ctx, line2).width) + 14
     const lbH    = 24
-    const rawLbX = x
-    const lbX    = Math.max(4, Math.min(rawLbX, canvasW - lbW - 4))
-    const lbY    = y - lbH - 5
+    const lbX = x
+    const lbY = y - lbH - 5
 
     ctx.shadowBlur = 0
     ctx.fillStyle  = 'rgba(11,12,14,0.85)'
@@ -277,8 +276,7 @@ function drawBoundingBox(ctx, p, canvasW) {
     const line2  = `CONF: ${conf}%  ▮ VERIFIED`
     const lbW    = Math.max(measureText(ctx, line1).width, measureText(ctx, line2).width) + 14
     const lbH    = 24
-    const rawLbX = x
-    const lbX    = Math.max(4, Math.min(rawLbX, canvasW - lbW - 4))
+    const lbX    = x
     const lbY    = y - lbH - 5
 
     ctx.shadowBlur = 0
@@ -298,8 +296,7 @@ function drawBoundingBox(ctx, p, canvasW) {
     const line2  = `◌ NOT IN DATABASE`
     const lbW    = Math.max(measureText(ctx, line1).width, measureText(ctx, line2).width) + 14
     const lbH    = 24
-    const rawLbX = x
-    const lbX    = Math.max(4, Math.min(rawLbX, canvasW - lbW - 4))
+    const lbX    = x
     const lbY    = y - lbH - 5
 
     ctx.shadowBlur = 0
@@ -326,13 +323,13 @@ function drawParticles(ctx, particles) {
   })
 }
 
-function drawHUD(ctx, persons, w, h, t) {
+function drawHUD(ctx, persons, w, h, t, mobile = false) {
   const verified  = persons.filter((p) => p.state === 'verified').length
   const inGate    = persons.filter((p) => p.state === 'scanning').length
   const active    = persons.filter((p) => p.alpha > 0.3).length
 
   ctx.save()
-  ctx.font      = '7.5px "JetBrains Mono", monospace'
+  ctx.font      = `${mobile ? 6.5 : 7.5}px "JetBrains Mono", monospace`
   ctx.textAlign = 'left'
 
   const rows = [
@@ -374,7 +371,7 @@ export function HeroCanvas() {
     if (!canvas) return
     const ctx = canvas.getContext('2d')
 
-    const state = { persons: [], particles: [], t: 0 }
+    const state = { persons: [], particles: [], t: 0, initialized: false }
     stateRef.current = state
 
     const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight }
@@ -382,42 +379,38 @@ export function HeroCanvas() {
     const ro = new ResizeObserver(resize)
     ro.observe(canvas)
 
-    // Fewer persons on small screens to avoid clutter
-    const isMobile   = canvas.width < 600
-    const maxPersons = canvas.width < 500 ? 2 : canvas.width < 768 ? 3 : 5
+    // Defer scene init to first frame so canvas dimensions are guaranteed correct
+    function initScene(W, H) {
+      const isMobile   = W < 600
+      const maxPersons = W < 500 ? 2 : W < 768 ? 3 : rndI(5, 7)
+      const gate0      = gateZone(W)
 
-    // Pre-seed persons at various positions so the scene looks live on load
-    const gate0 = gateZone(canvas.width)
-    for (let i = 0; i < maxPersons; i++) {
-      const p  = spawnPerson(canvas.width, canvas.height, isMobile)
-      p.x      = rnd(canvas.width * 0.04, canvas.width * 0.78)
-      p.alpha  = rnd(0.5, 1)
-      const cx = p.x + p.w / 2
-      if (cx < gate0.left - 80) {
-        // still approaching, no box yet
-        p.state = 'approaching'; p.boxT = 0
-      } else if (cx < gate0.left) {
-        // just before gate — box drawing
-        p.state = 'approaching'; p.boxT = rnd(0.3, 0.9)
-      } else if (cx <= gate0.right) {
-        // inside gate — mid-scan
-        p.state = 'scanning'; p.boxT = 1; p.scanT = rnd(0.1, 0.8)
-      } else {
-        // past gate — resolved
-        p.state = p.willVerify ? 'verified' : 'unknown'; p.boxT = 1; p.scanT = 1
+      for (let i = 0; i < maxPersons; i++) {
+        const p = spawnPerson(W, H, isMobile)
+        p.x     = rnd(W * 0.04, W * 0.78)
+        p.alpha = rnd(0.5, 1)
+        const cx = p.x + p.w / 2
+        if (cx < gate0.left - 80) {
+          p.state = 'approaching'; p.boxT = 0
+        } else if (cx < gate0.left) {
+          p.state = 'approaching'; p.boxT = rnd(0.3, 0.9)
+        } else if (cx <= gate0.right) {
+          p.state = 'scanning'; p.boxT = 1; p.scanT = rnd(0.1, 0.8)
+        } else {
+          p.state = p.willVerify ? 'verified' : 'unknown'; p.boxT = 1; p.scanT = 1
+        }
+        state.persons.push(p)
       }
-      state.persons.push(p)
-    }
 
-    // Particles
-    for (let i = 0; i < 55; i++) {
-      state.particles.push({
-        x: rnd(canvas.width * 0.38, canvas.width * 0.62),
-        y: rnd(canvas.height * 0.62, canvas.height * 0.78),
-        vx: rnd(-0.35, 0.35), vy: rnd(-1.4, -0.4),
-        r: rnd(0.8, 2.2), life: rnd(0, 1), alpha: 0,
-        gold: Math.random() > 0.45,
-      })
+      for (let i = 0; i < 55; i++) {
+        state.particles.push({
+          x: rnd(W * 0.38, W * 0.62), y: rnd(H * 0.62, H * 0.78),
+          vx: rnd(-0.35, 0.35), vy: rnd(-1.4, -0.4),
+          r: rnd(0.8, 2.2), life: rnd(0, 1), alpha: 0,
+          gold: Math.random() > 0.45,
+        })
+      }
+      state.initialized = true
     }
 
     let last = 0
@@ -427,6 +420,9 @@ export function HeroCanvas() {
       last = ts; state.t += dt
       const { width: W, height: H } = canvas
       const t = state.t
+
+      // Init scene on first frame when real dimensions are available
+      if (!state.initialized && W > 0 && H > 0) initScene(W, H)
 
       ctx.clearRect(0, 0, W, H)
       ctx.fillStyle = '#0B0C0E'; ctx.fillRect(0, 0, W, H)
@@ -481,10 +477,10 @@ export function HeroCanvas() {
           const fresh = spawnPerson(W, H, mobile)
           // Pick a Y lane that's not already occupied to avoid label overlap
           const usedYs = state.persons.filter(o => o !== p).map(o => o.y)
-          const laneH  = (H * 0.58 - H * 0.36) / 5
+          const laneH  = (H * 0.64 - H * 0.42) / 5
           let bestY = fresh.y, bestDist = 0
           for (let li = 0; li < 5; li++) {
-            const cy = H * 0.36 + laneH * li + laneH / 2
+            const cy = H * 0.42 + laneH * li + laneH / 2
             const minDist = Math.min(...usedYs.map(uy => Math.abs(uy - cy)), 9999)
             if (minDist > bestDist) { bestDist = minDist; bestY = cy }
           }
@@ -494,7 +490,7 @@ export function HeroCanvas() {
 
         if (isVisible(p, W)) {
           drawSilhouette(ctx, p)
-          drawBoundingBox(ctx, p, W)
+          drawBoundingBox(ctx, p)
         }
       })
 
@@ -513,7 +509,7 @@ export function HeroCanvas() {
         }
       })
       drawParticles(ctx, state.particles)
-      if (!mobile) drawHUD(ctx, state.persons, W, H, t)
+      drawHUD(ctx, state.persons, W, H, t, mobile)
 
       rafRef.current = requestAnimationFrame(frame)
     }

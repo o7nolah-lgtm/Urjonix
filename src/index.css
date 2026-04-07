@@ -137,8 +137,8 @@
     min-height: auto;
   }
   .hero-canvas-col {
-    height: 72vw;
-    max-height: 320px;
+    height: 70vh;
+    min-height: 480px;
     border-left: none;
     border-top: 1px solid rgba(161,161,161,0.08);
     overflow: hidden;
