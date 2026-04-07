@@ -220,7 +220,7 @@ export function Header() {
             </Link>
           ))}
           <a
-            href="https://shop.urjionix.com"
+            href="https://edgetechrobotics.com"
             target="_blank"
             rel="noopener noreferrer"
             style={{
