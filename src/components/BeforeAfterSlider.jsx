@@ -1,9 +1,9 @@
-import { useRef, useState } from 'preact/hooks'
+import { useRef, useState, useEffect } from 'preact/hooks'
 
 export function BeforeAfterSlider({ before, after }) {
   const containerRef = useRef(null)
-  const [pos, setPos]   = useState(0.5)
-  const dragging        = useRef(false)
+  const [pos, setPos] = useState(0.5)
+  const dragging = useRef(false)
 
   const clamp = (v) => Math.max(0.02, Math.min(0.98, v))
 
@@ -12,13 +12,43 @@ export function BeforeAfterSlider({ before, after }) {
     setPos(clamp((clientX - rect.left) / rect.width))
   }
 
+  // Pointer events (mouse + stylus)
   const onPointerDown = (e) => {
     dragging.current = true
-    containerRef.current.setPointerCapture(e.pointerId)
+    e.currentTarget.setPointerCapture(e.pointerId)
     updateFromClient(e.clientX)
   }
-  const onPointerMove = (e) => { if (dragging.current) updateFromClient(e.clientX) }
-  const onPointerUp   = ()  => { dragging.current = false }
+  const onPointerMove = (e) => {
+    if (!dragging.current) return
+    updateFromClient(e.clientX)
+  }
+  const onPointerUp = () => { dragging.current = false }
+
+  // Native touch events — needed to call preventDefault and stop page scroll
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const onTouchStart = (e) => {
+      dragging.current = true
+      updateFromClient(e.touches[0].clientX)
+    }
+    const onTouchMove = (e) => {
+      if (!dragging.current) return
+      e.preventDefault() // blocks vertical page scroll while dragging
+      updateFromClient(e.touches[0].clientX)
+    }
+    const onTouchEnd = () => { dragging.current = false }
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove',  onTouchMove,  { passive: false })
+    el.addEventListener('touchend',   onTouchEnd,   { passive: true })
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart)
+      el.removeEventListener('touchmove',  onTouchMove)
+      el.removeEventListener('touchend',   onTouchEnd)
+    }
+  }, [])
 
   const pct = `${pos * 100}%`
 
@@ -31,6 +61,8 @@ export function BeforeAfterSlider({ before, after }) {
       style={{
         position: 'relative',
         userSelect: 'none',
+        WebkitUserSelect: 'none',
+        touchAction: 'pan-y', // allow vertical scroll normally; JS overrides on drag
         cursor: 'ew-resize',
         overflow: 'hidden',
         borderRadius: '4px',
@@ -92,13 +124,11 @@ export function BeforeAfterSlider({ before, after }) {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '3px',
           }}
         >
-          {/* Chevrons */}
-          <svg width="18" height="12" viewBox="0 0 18 12" fill="#0B0C0E">
-            <path d="M6 1L1 6l5 5" stroke="#0B0C0E" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M12 1l5 5-5 5" stroke="#0B0C0E" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="18" height="12" viewBox="0 0 18 12" fill="none">
+            <path d="M6 1L1 6l5 5" stroke="#0B0C0E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M12 1l5 5-5 5" stroke="#0B0C0E" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
       </div>
@@ -106,36 +136,24 @@ export function BeforeAfterSlider({ before, after }) {
       {/* ── Corner labels ── */}
       <span
         style={{
-          position: 'absolute',
-          top: '14px',
-          left: '14px',
+          position: 'absolute', top: '14px', left: '14px',
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '0.58rem',
-          letterSpacing: '0.18em',
+          fontSize: '0.58rem', letterSpacing: '0.18em',
           color: 'rgba(255,255,255,0.6)',
-          background: 'rgba(11,12,14,0.75)',
-          padding: '3px 8px',
-          borderRadius: '2px',
-          pointerEvents: 'none',
-          border: '1px solid rgba(161,161,161,0.18)',
+          background: 'rgba(11,12,14,0.75)', padding: '3px 8px', borderRadius: '2px',
+          pointerEvents: 'none', border: '1px solid rgba(161,161,161,0.18)',
         }}
       >
         RAW FEED
       </span>
       <span
         style={{
-          position: 'absolute',
-          top: '14px',
-          right: '14px',
+          position: 'absolute', top: '14px', right: '14px',
           fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '0.58rem',
-          letterSpacing: '0.18em',
+          fontSize: '0.58rem', letterSpacing: '0.18em',
           color: '#D4AF37',
-          background: 'rgba(11,12,14,0.75)',
-          padding: '3px 8px',
-          borderRadius: '2px',
-          pointerEvents: 'none',
-          border: '1px solid rgba(212,175,55,0.3)',
+          background: 'rgba(11,12,14,0.75)', padding: '3px 8px', borderRadius: '2px',
+          pointerEvents: 'none', border: '1px solid rgba(212,175,55,0.3)',
         }}
       >
         AI ENHANCED
