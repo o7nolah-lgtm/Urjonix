@@ -235,8 +235,10 @@
   gap: 1.5px;
   background: rgba(161,161,161,0.06);
 }
+.compare-mobile { display: none; }
 @media (max-width: 640px) {
-  .compare-grid { grid-template-columns: 1fr; }
+  .compare-grid   { display: none; }
+  .compare-mobile { display: flex; flex-direction: column; gap: 0.6rem; }
 }
 
 /* Noise texture overlay */

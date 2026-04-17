@@ -2,8 +2,9 @@ import { useEffect, useRef } from 'preact/hooks'
 import { Link } from 'wouter'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { HeroCanvas }  from '../components/HeroCanvas.jsx'
-import { ProcessCard } from '../components/ProcessCard.jsx'
+import { HeroCanvas }    from '../components/HeroCanvas.jsx'
+import { ProcessCard }   from '../components/ProcessCard.jsx'
+import { ScrambleText }  from '../components/ScrambleText.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -87,7 +88,7 @@ function CompareSection() {
       padding: 'clamp(4rem,10vw,7rem) clamp(1.5rem,8vw,8rem)',
       maxWidth: '1400px', margin: '0 auto',
     }}>
-      <p class="gsap-hidden mono-label" style={{ marginBottom: '0.75rem' }}>The Problem We Solve</p>
+      <ScrambleText text="THE PROBLEM WE SOLVE" class="gsap-hidden mono-label" style={{ display: 'block', marginBottom: '0.75rem' }} duration={900} />
       <h2 class="gsap-hidden" style={{
         fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
         fontSize: 'clamp(1.8rem,4vw,3rem)', letterSpacing: '-0.03em',
@@ -102,6 +103,29 @@ function CompareSection() {
         </span>
       </h2>
 
+      {/* Mobile — just the Urjionix Way as a clean checklist */}
+      <div class="gsap-hidden compare-mobile">
+        <p style={{
+          fontFamily: '"JetBrains Mono", monospace', fontSize: '0.52rem',
+          letterSpacing: '0.2em', color: GOLD, textTransform: 'uppercase',
+          marginBottom: '0.5rem',
+        }}>Urjionix Way</p>
+        {OLD_VS_NEW.map(([, neo], i) => (
+          <div key={i} style={{
+            display: 'flex', alignItems: 'flex-start', gap: '12px',
+            padding: '0.9rem 1rem',
+            background: GOLD_A(0.04),
+            border: `1px solid ${GOLD_A(0.15)}`,
+            borderLeft: `2px solid ${GOLD_A(0.5)}`,
+            borderRadius: '2px',
+          }}>
+            <span style={{ color: GOLD, fontSize: '0.75rem', flexShrink: 0, marginTop: '1px' }}>✓</span>
+            <p style={{ fontSize: '0.85rem', color: '#C0C0C0', lineHeight: 1.5 }}>{neo}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop — full two-column table */}
       <div class="gsap-hidden compare-grid">
         {/* Header row */}
         <div style={{
@@ -372,9 +396,12 @@ export function Home() {
           padding: 'clamp(6rem, 12vw, 10rem) clamp(1.5rem, 5vw, 5rem)',
           zIndex: 2, position: 'relative',
         }}>
-          <p class="mono-label hero-headline" style={{ marginBottom: '1.5rem', color: GOLD }}>
-            Urjionix Technologies — AI & Robotics
-          </p>
+          <ScrambleText
+            text="URJIONIX TECHNOLOGIES — AI & ROBOTICS"
+            class="hero-headline"
+            style={{ display: 'block', marginBottom: '1.5rem', color: GOLD, fontSize: '0.65rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}
+            delay={400} duration={1200}
+          />
           <h1 class="hero-headline" style={{
             fontFamily: '"Inter Tight", sans-serif', fontWeight: 900,
             fontSize: 'clamp(2rem, 5vw, 4rem)', lineHeight: 1.05,
@@ -442,6 +469,68 @@ export function Home() {
       {/* ══════════════════════════════════════════════════ OLD VS NEW */}
       <CompareSection />
 
+      {/* ══════════════════════════════════════════════ FIELD IMAGE */}
+      <section style={{
+        position: 'relative', overflow: 'hidden',
+        height: 'clamp(320px, 50vw, 560px)',
+      }}>
+        <img
+          src="/robotics-engineer.png"
+          alt="Engineer working with industrial robot"
+          style={{
+            position: 'absolute', inset: 0,
+            width: '100%', height: '100%',
+            objectFit: 'cover', objectPosition: 'center 30%',
+            filter: 'brightness(0.45) saturate(0.7)',
+          }}
+        />
+        {/* Left-to-right fade overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          background: 'linear-gradient(90deg, rgba(11,12,14,0.92) 0%, rgba(11,12,14,0.5) 50%, rgba(11,12,14,0.1) 100%)',
+        }} />
+        {/* Bottom fade */}
+        <div style={{
+          position: 'absolute', bottom: 0, left: 0, right: 0, height: '120px',
+          background: 'linear-gradient(0deg, #0B0C0E, transparent)',
+        }} />
+        {/* Top fade */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '80px',
+          background: 'linear-gradient(180deg, #0B0C0E, transparent)',
+        }} />
+
+        {/* Text overlay */}
+        <div style={{
+          position: 'absolute', inset: 0,
+          display: 'flex', flexDirection: 'column', justifyContent: 'center',
+          padding: 'clamp(2rem, 8vw, 8rem)',
+          maxWidth: '680px',
+        }}>
+          <ScrambleText text="IN THE FIELD" style={{ display: 'block', fontSize: '0.58rem', letterSpacing: '0.22em', color: GOLD_A(0.7), textTransform: 'uppercase', marginBottom: '1rem' }} duration={900} />
+          <h2 style={{
+            fontFamily: '"Inter Tight", sans-serif', fontWeight: 900,
+            fontSize: 'clamp(1.8rem, 4vw, 3.2rem)', letterSpacing: '-0.03em',
+            color: '#fff', lineHeight: 1.1, marginBottom: '1rem',
+          }}>
+            Built by engineers.<br />
+            <span style={{
+              background: 'linear-gradient(135deg, #FBF5A9, #D4AF37, #B59410)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
+              For the real world.
+            </span>
+          </h2>
+          <p style={{
+            fontSize: '0.88rem', color: 'rgba(255,255,255,0.45)',
+            lineHeight: 1.8, maxWidth: '420px',
+          }}>
+            We don't just write code. We get on the floor, wire the hardware,
+            and make sure it works before we leave.
+          </p>
+        </div>
+      </section>
+
       {/* ═════════════════════════════════════════════════ PROCESS CARDS */}
       <section class="section-px" style={{
         padding: 'clamp(3rem, 8vw, 6rem) clamp(1.5rem, 8vw, 8rem)',
@@ -449,7 +538,7 @@ export function Home() {
         maxWidth: '1400px', margin: '0 auto',
       }}>
         <div style={{ marginBottom: '3rem' }}>
-          <p class="gsap-hidden mono-label" style={{ marginBottom: '0.75rem' }}>How We Build</p>
+          <ScrambleText text="HOW WE BUILD" class="gsap-hidden mono-label" style={{ display: 'block', marginBottom: '0.75rem' }} duration={800} />
           <h2 class="gsap-hidden" style={{
             fontFamily: '"Inter Tight", sans-serif', fontWeight: 700,
             fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', letterSpacing: '-0.02em', color: '#ffffff',
@@ -586,7 +675,7 @@ export function Home() {
           ))}
 
           <div>
-            <p class="mono-label" style={{ marginBottom: '0.5rem', color: GOLD }}>Got a deployment challenge?</p>
+            <ScrambleText text="GOT A DEPLOYMENT CHALLENGE?" style={{ display: 'block', marginBottom: '0.5rem', color: GOLD, fontSize: '0.65rem', letterSpacing: '0.2em' }} duration={1000} />
             <h2 style={{
               fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
               fontSize: 'clamp(1.6rem, 3vw, 2.8rem)', letterSpacing: '-0.02em', color: '#fff',

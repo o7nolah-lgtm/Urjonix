@@ -69,13 +69,18 @@ function Corner({ pos }) {
 }
 
 // ── Info block ────────────────────────────────────────────────────────────
-function InfoBlock({ icon, label, value, sub }) {
-  return (
+function InfoBlock({ icon, label, value, sub, href }) {
+  const inner = (
     <div style={{
       display: 'flex', gap: '1.2rem', alignItems: 'flex-start',
       padding: '1.5rem 0',
       borderBottom: '1px solid rgba(161,161,161,0.07)',
-    }}>
+      transition: 'opacity 0.2s',
+      cursor: href ? 'pointer' : 'default',
+    }}
+    onMouseEnter={e => { if (href) e.currentTarget.style.opacity = '0.75' }}
+    onMouseLeave={e => { if (href) e.currentTarget.style.opacity = '1' }}
+    >
       <div style={{
         width: '36px', height: '36px', flexShrink: 0,
         border: `1px solid ${GOLD_A(0.3)}`,
@@ -96,6 +101,12 @@ function InfoBlock({ icon, label, value, sub }) {
         <p style={{ fontSize: '0.72rem', color: '#555', fontFamily: '"JetBrains Mono", monospace' }}>{sub}</p>
       </div>
     </div>
+  )
+  if (!href) return inner
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none', display: 'block' }}>
+      {inner}
+    </a>
   )
 }
 
@@ -186,10 +197,10 @@ export function Contact() {
 
           {/* ── Left: info ──────────────────────────────────────────── */}
           <div class="gsap-hidden">
-            <InfoBlock icon="✉" label="General Enquiries"       value="contact@urjionix.com"    sub="Response within 24 hours" />
-            <InfoBlock icon="📞" label="Phone"                   value="+91 XXXXX XXXXX"         sub="Mon–Sat, 10am–7pm IST" />
-            <InfoBlock icon="⚡" label="Hardware & Robotics"     value="edgetechrobotics.com"    sub="Edge Tech Robotics — dev kits" />
-            <InfoBlock icon="📍" label="Location"                value="India"                   sub="Deployments: Nationwide + SEA" />
+            <InfoBlock icon="✉" label="General Enquiries"   value="contact@urjionix.com"  sub="Response within 24 hours"     href="mailto:contact@urjionix.com" />
+            <InfoBlock icon="📞" label="Phone"              value="+91 XXXXX XXXXX"       sub="Mon–Sat, 10am–7pm IST"        href="https://wa.me/91XXXXXXXXXX" />
+            <InfoBlock icon="⚡" label="Hardware & Robotics" value="edgetechrobotics.com" sub="Edge Tech Robotics — dev kits" href="https://edgetechrobotics.com" />
+            <InfoBlock icon="📍" label="Location"            value="India"                sub="Deployments: Nationwide + SEA" href="https://maps.google.com/?q=India" />
 
             {/* What we work on */}
             <div style={{ marginTop: '2.5rem' }}>
@@ -333,12 +344,13 @@ export function Contact() {
                         boxSizing: 'border-box',
                       }}>
                       <option value="">Select...</option>
+                      <option value="custom-ai">Custom AI System Design</option>
                       <option value="robotics">Robotics & Autonomous Systems</option>
-                      <option value="edge-ai">Edge AI System Design</option>
-                      <option value="surveillance">Smart Surveillance / Traffic</option>
+                      <option value="surveillance">Smart Surveillance & Traffic Systems</option>
                       <option value="retail">Retail & Mall Intelligence</option>
-                      <option value="hardware">Hardware Kit / OEM</option>
-                      <option value="advisory">Technical Advisory</option>
+                      <option value="edge-compute">Edge Compute Deployments</option>
+                      <option value="hardware">Hardware OEM & White-label</option>
+                      <option value="advisory">Technical Advisory & Architecture</option>
                       <option value="other">Other</option>
                     </select>
                   </div>

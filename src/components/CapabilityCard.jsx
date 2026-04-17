@@ -1,6 +1,7 @@
-export function CapabilityCard({ index, tag, title, description, bullets, visual }) {
+export function CapabilityCard({ id, index, tag, title, description, bullets, visual }) {
   return (
     <div
+      id={id}
       class="gsap-hidden cap-card-grid"
       style={{
         border: '1px solid rgba(161,161,161,0.1)',

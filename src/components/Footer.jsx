@@ -115,23 +115,23 @@ export function Footer() {
               Capabilities
             </p>
             {[
-              'Computer Vision & Edge AI',
-              'Robotics & Autonomous Systems',
-              'Prototype-to-Production',
-              'Data Integrity & Compliance',
-              'Edge Tech Robotics (Shop)',
-            ].map(item => (
-              <p
-                key={item}
-                style={{
-                  marginBottom: '0.7rem',
-                  fontSize: '0.82rem',
-                  color: '#A1A1A1',
-                  lineHeight: 1.5,
-                }}
-              >
-                {item}
-              </p>
+              { label: 'Computer Vision & Edge AI',    href: '/capabilities#computer-vision' },
+              { label: 'Robotics & Autonomous Systems', href: '/capabilities#robotics' },
+              { label: 'Prototype-to-Production',       href: '/capabilities#prototype-to-production' },
+              { label: 'Data Integrity & Compliance',   href: '/capabilities#data-integrity' },
+              { label: 'Edge Tech Robotics (Shop)',      href: 'https://edgetechrobotics.com', external: true },
+            ].map(({ label, href, external }) => (
+              external
+                ? <a key={href} href={href} target="_blank" rel="noopener noreferrer"
+                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: '#A1A1A1', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
+                  >{label}</a>
+                : <a key={href} href={href}
+                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: '#A1A1A1', textDecoration: 'none', transition: 'color 0.2s' }}
+                    onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
+                  >{label}</a>
             ))}
           </div>
 
@@ -149,15 +149,22 @@ export function Footer() {
             >
               Contact
             </p>
-            <p style={{ fontSize: '0.82rem', color: '#A1A1A1', marginBottom: '0.6rem' }}>
-              contact@urjionix.com
-            </p>
-            <p style={{ fontSize: '0.82rem', color: '#A1A1A1', marginBottom: '0.6rem' }}>
-              Urjionix Technologies Pvt Ltd
-            </p>
-            <p style={{ fontSize: '0.82rem', color: '#A1A1A1' }}>
-              India
-            </p>
+            {[
+              { label: 'contact@urjionix.com',      href: 'mailto:contact@urjionix.com' },
+              { label: '+91 XXXXX XXXXX',            href: 'https://wa.me/91XXXXXXXXXX' },
+              { label: 'India',                      href: 'https://maps.google.com/?q=India' },
+            ].map(({ label, href }) => (
+              <a key={href} href={href} target="_blank" rel="noopener noreferrer"
+                style={{
+                  display: 'block', fontSize: '0.82rem', color: '#A1A1A1',
+                  marginBottom: '0.6rem', textDecoration: 'none', transition: 'color 0.2s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
+                onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
+              >
+                {label}
+              </a>
+            ))}
           </div>
         </div>
 

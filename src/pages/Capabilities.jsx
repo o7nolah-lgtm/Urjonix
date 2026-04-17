@@ -502,10 +502,10 @@ export function Capabilities() {
       </section>
 
       {/* ─── Use Case Showcase — Traffic ───────────────────────────── */}
-      <UseCaseShowcase />
+      <div id="traffic-ai"><UseCaseShowcase /></div>
 
       {/* ─── Use Case Showcase — Mall AI ───────────────────────────── */}
-      <MallShowcase />
+      <div id="mall-ai"><MallShowcase /></div>
 
       {/* ─── Capability Cards ──────────────────────────────────────── */}
       <section
@@ -520,6 +520,7 @@ export function Capabilities() {
         }}
       >
         <CapabilityCard
+          id="computer-vision"
           index={0}
           tag="Edge AI & Computer Vision"
           title="See More. Know More. Act Faster."
@@ -534,6 +535,7 @@ export function Capabilities() {
           visual={<CVVisual />}
         />
         <CapabilityCard
+          id="prototype-to-production"
           index={1}
           tag="Hardware & Systems Engineering"
           title="From Concept to Field-Ready."
@@ -548,6 +550,7 @@ export function Capabilities() {
           visual={<PCBVisual />}
         />
         <CapabilityCard
+          id="robotics"
           index={2}
           tag="Robotics & Autonomous Systems"
           title="Machines That Think and Act."
@@ -562,6 +565,7 @@ export function Capabilities() {
           visual={<RoboticsVisual />}
         />
         <CapabilityCard
+          id="data-integrity"
           index={3}
           tag="Connectivity & Data Pipelines"
           title="Always Connected. Always Compliant."
