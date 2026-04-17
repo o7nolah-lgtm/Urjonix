@@ -55,10 +55,10 @@ export function Footer() {
                 marginBottom: '1rem',
               }}
             >
-              BUILD. FAST. SCALE.
+              AI · ROBOTICS · EDGE
             </p>
             <p style={{ fontSize: '0.8rem', color: '#6C6C6C', lineHeight: 1.7, maxWidth: '260px' }}>
-              Engineering mission-critical AI and edge compute solutions for institutional-scale deployments.
+              AI and Robotics company building intelligent systems — from edge vision to autonomous machines.
             </p>
           </div>
 
@@ -116,6 +116,7 @@ export function Footer() {
             </p>
             {[
               'Computer Vision & Edge AI',
+              'Robotics & Autonomous Systems',
               'Prototype-to-Production',
               'Data Integrity & Compliance',
               'Edge Tech Robotics (Shop)',
@@ -190,7 +191,7 @@ export function Footer() {
               color: '#3C3C3C',
             }}
           >
-            EDGE AI · JETSON ORIN · COMPUTER VISION
+            AI · ROBOTICS · EDGE COMPUTE · COMPUTER VISION
           </p>
         </div>
       </div>

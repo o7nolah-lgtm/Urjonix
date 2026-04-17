@@ -1,5 +1,5 @@
 import { useEffect } from 'preact/hooks'
-import { Router, Route, Switch } from 'wouter'
+import { Router, Route, Switch, useLocation } from 'wouter'
 import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -12,6 +12,12 @@ import { CaseStudy } from './pages/CaseStudy.jsx'
 import { Contact } from './pages/Contact.jsx'
 
 gsap.registerPlugin(ScrollTrigger)
+
+function ScrollToTop() {
+  const [location] = useLocation()
+  useEffect(() => { window.scrollTo(0, 0) }, [location])
+  return null
+}
 
 export function App() {
   useEffect(() => {
@@ -38,6 +44,7 @@ export function App() {
       <LoadingBar />
       <Header />
       <Router>
+        <ScrollToTop />
         <Switch>
           <Route path="/" component={Home} />
           <Route path="/capabilities" component={Capabilities} />

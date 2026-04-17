@@ -4,81 +4,119 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// ── Minimal input component ───────────────────────────────────────────────
+const GOLD   = '#D4AF37'
+const GOLD_A = (a) => `rgba(212,175,55,${a})`
+
+// ── Field ─────────────────────────────────────────────────────────────────
 function Field({ label, type = 'text', name, required, placeholder, multiline = false }) {
   const [focused, setFocused] = useState(false)
 
-  const baseStyle = {
+  const inputStyle = {
     width: '100%',
     background: 'transparent',
     border: 'none',
-    borderBottom: `1px solid ${focused ? '#D4AF37' : 'rgba(161,161,161,0.25)'}`,
-    padding: '0.75rem 0',
+    borderBottom: `1px solid ${focused ? GOLD : 'rgba(161,161,161,0.18)'}`,
+    padding: '0.7rem 0',
     color: '#ffffff',
     fontFamily: '"Inter Tight", sans-serif',
-    fontSize: '0.92rem',
+    fontSize: '0.9rem',
     outline: 'none',
-    transition: 'border-color 0.25s ease',
+    transition: 'border-color 0.25s',
     resize: 'none',
-    boxShadow: focused ? '0 1px 0 0 rgba(212,175,55,0.4)' : 'none',
+    boxSizing: 'border-box',
   }
 
   return (
-    <div style={{ marginBottom: '2.2rem' }}>
-      <label
-        style={{
-          display: 'block',
-          fontFamily: '"JetBrains Mono", monospace',
-          fontSize: '0.58rem',
-          letterSpacing: '0.2em',
-          color: focused ? '#D4AF37' : '#6C6C6C',
-          marginBottom: '0.5rem',
-          textTransform: 'uppercase',
-          transition: 'color 0.25s ease',
-        }}
-      >
-        {label}{required && <span style={{ color: '#D4AF37', marginLeft: '4px' }}>*</span>}
+    <div style={{ marginBottom: '2rem' }}>
+      <label style={{
+        display: 'block',
+        fontFamily: '"JetBrains Mono", monospace',
+        fontSize: '0.55rem',
+        letterSpacing: '0.2em',
+        color: focused ? GOLD : '#555',
+        marginBottom: '0.4rem',
+        textTransform: 'uppercase',
+        transition: 'color 0.25s',
+      }}>
+        {label}{required && <span style={{ color: GOLD, marginLeft: '4px' }}>*</span>}
       </label>
-      {multiline ? (
-        <textarea
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          rows={4}
-          style={{ ...baseStyle, display: 'block', lineHeight: 1.7 }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-      ) : (
-        <input
-          type={type}
-          name={name}
-          placeholder={placeholder}
-          required={required}
-          style={{ ...baseStyle, display: 'block' }}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
-        />
-      )}
+      {multiline
+        ? <textarea name={name} placeholder={placeholder} required={required} rows={4}
+            style={{ ...inputStyle, display: 'block', lineHeight: 1.7 }}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+        : <input type={type} name={name} placeholder={placeholder} required={required}
+            style={{ ...inputStyle, display: 'block' }}
+            onFocus={() => setFocused(true)} onBlur={() => setFocused(false)} />
+      }
+    </div>
+  )
+}
+
+// ── Corner decoration SVG ─────────────────────────────────────────────────
+function Corner({ pos }) {
+  const s = {
+    tl: { top: 0,    left: 0,    transform: 'none' },
+    tr: { top: 0,    right: 0,   transform: 'scaleX(-1)' },
+    br: { bottom: 0, right: 0,   transform: 'scale(-1)' },
+    bl: { bottom: 0, left: 0,    transform: 'scaleY(-1)' },
+  }[pos]
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none"
+      style={{ position: 'absolute', ...s, opacity: 0.6 }}>
+      <path d="M0 18 L0 0 L18 0" stroke={GOLD} strokeWidth="1.2"/>
+    </svg>
+  )
+}
+
+// ── Info block ────────────────────────────────────────────────────────────
+function InfoBlock({ icon, label, value, sub }) {
+  return (
+    <div style={{
+      display: 'flex', gap: '1.2rem', alignItems: 'flex-start',
+      padding: '1.5rem 0',
+      borderBottom: '1px solid rgba(161,161,161,0.07)',
+    }}>
+      <div style={{
+        width: '36px', height: '36px', flexShrink: 0,
+        border: `1px solid ${GOLD_A(0.3)}`,
+        borderRadius: '3px',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '0.9rem',
+        background: GOLD_A(0.05),
+      }}>
+        {icon}
+      </div>
+      <div>
+        <p style={{
+          fontFamily: '"JetBrains Mono", monospace',
+          fontSize: '0.52rem', letterSpacing: '0.2em',
+          color: GOLD, textTransform: 'uppercase', marginBottom: '0.3rem',
+        }}>{label}</p>
+        <p style={{ fontSize: '0.88rem', color: '#fff', marginBottom: '0.15rem' }}>{value}</p>
+        <p style={{ fontSize: '0.72rem', color: '#555', fontFamily: '"JetBrains Mono", monospace' }}>{sub}</p>
+      </div>
     </div>
   )
 }
 
 // ── Page ──────────────────────────────────────────────────────────────────
 export function Contact() {
-  const pageRef    = useRef(null)
+  const pageRef = useRef(null)
   const [sent, setSent] = useState(false)
+  const [selectFocused, setSelectFocused] = useState(false)
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      gsap.from('.ct-hero', {
-        opacity: 0, y: 36, stagger: 0.12, duration: 1, ease: 'power3.out', delay: 0.2,
-      })
+      gsap.fromTo('.ct-hero',
+        { opacity: 0, y: 36 },
+        { opacity: 1, y: 0, stagger: 0.12, duration: 1, ease: 'power3.out', delay: 0.2 }
+      )
       gsap.utils.toArray('.gsap-hidden').forEach((el) => {
-        gsap.from(el, {
-          scrollTrigger: { trigger: el, start: 'top 88%', once: true },
-          opacity: 0, y: 24, duration: 0.8, ease: 'power3.out',
-        })
+        gsap.fromTo(el,
+          { opacity: 0, y: 24 },
+          { opacity: 1, y: 0, duration: 0.9, ease: 'power3.out',
+            scrollTrigger: { trigger: el, start: 'top 88%', once: true } }
+        )
       })
     }, pageRef)
     return () => ctx.revert()
@@ -86,313 +124,246 @@ export function Contact() {
 
   function handleSubmit(e) {
     e.preventDefault()
-    // In production wire to your backend / Formspree / etc.
     setSent(true)
   }
 
   return (
-    <main ref={pageRef}>
-      {/* ─── Hero ──────────────────────────────────────────── */}
-      <section
-        style={{
-          paddingTop:    'clamp(8rem, 16vw, 12rem)',
-          paddingBottom: 'clamp(4rem, 8vw,  6rem)',
-          paddingLeft:   'clamp(2rem, 8vw,  8rem)',
-          paddingRight:  'clamp(2rem, 8vw,  8rem)',
-          maxWidth: '1400px',
-          margin: '0 auto',
-          borderBottom: '1px solid rgba(161,161,161,0.08)',
-        }}
-      >
-        <p class="ct-hero mono-label" style={{ marginBottom: '1rem' }}>
-          Contact — Scale the Mission
-        </p>
-        <h1
-          class="ct-hero"
-          style={{
+    <main ref={pageRef} style={{ background: '#0B0C0E' }}>
+
+      {/* ── Hero ─────────────────────────────────────────────────────── */}
+      <section style={{ position: 'relative', overflow: 'hidden' }}>
+        {/* Background radial glow */}
+        <div style={{
+          position: 'absolute', inset: 0, pointerEvents: 'none',
+          background: 'radial-gradient(ellipse 70% 60% at 50% 0%, rgba(212,175,55,0.07) 0%, transparent 70%)',
+        }} />
+        {/* Horizontal rule decoration */}
+        <div style={{
+          position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
+          background: `linear-gradient(90deg, transparent, ${GOLD_A(0.4)}, transparent)`,
+        }} />
+
+        <div style={{
+          maxWidth: '1400px', margin: '0 auto',
+          padding: 'clamp(8rem,16vw,12rem) clamp(2rem,8vw,8rem) clamp(4rem,8vw,6rem)',
+        }}>
+          <p class="ct-hero mono-label" style={{ marginBottom: '1rem', color: GOLD_A(0.7) }}>
+            Contact — Let's Build Together
+          </p>
+          <h1 class="ct-hero" style={{
             fontFamily: '"Inter Tight", sans-serif',
             fontWeight: 900,
-            fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+            fontSize: 'clamp(2.8rem, 5.5vw, 5rem)',
             letterSpacing: '-0.03em',
-            lineHeight: 1.05,
-            maxWidth: '700px',
-          }}
-        >
-          Let's Scale{' '}
-          <span
-            style={{
+            lineHeight: 1.0,
+            maxWidth: '780px',
+            color: '#fff',
+          }}>
+            Have a Problem{' '}
+            <span style={{
               background: 'linear-gradient(135deg, #FBF5A9, #D4AF37, #B59410)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}
-          >
-            the Mission.
-          </span>
-        </h1>
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
+              Worth Solving?
+            </span>
+          </h1>
+          <p class="ct-hero" style={{
+            marginTop: '1.5rem',
+            fontSize: '1rem', color: '#5A5A5A', lineHeight: 1.8, maxWidth: '500px',
+          }}>
+            We work with institutions, operators, and builders on AI and Robotics challenges.
+            Tell us what you're building.
+          </p>
+        </div>
       </section>
 
-      {/* ─── Split layout ──────────────────────────────────── */}
-      <section
-        style={{
-          maxWidth: '1400px',
-          margin: '0 auto',
-          padding: 'clamp(3rem, 8vw, 6rem) clamp(1.5rem, 8vw, 8rem)',
-        }}
-      >
+      {/* ── Main content ─────────────────────────────────────────────── */}
+      <section style={{
+        maxWidth: '1400px', margin: '0 auto',
+        padding: 'clamp(2rem,6vw,4rem) clamp(2rem,8vw,8rem) clamp(4rem,8vw,6rem)',
+      }}>
         <div class="contact-grid">
-        {/* Left — Info ──────────────────────────────────────── */}
-        <div class="gsap-hidden">
-          <p
-            style={{
-              fontSize: '0.92rem',
-              color: '#A1A1A1',
-              lineHeight: 1.9,
-              marginBottom: '3rem',
-            }}
-          >
-            Urjionix works directly with institutions, system integrators, and mission-critical
-            operators who need bespoke AI and hardware solutions—not off-the-shelf software.
-            If you have a deployment challenge, we want to hear about it.
-          </p>
 
-          {/* Info blocks */}
-          {[
-            {
-              label: 'General Enquiries',
-              value: 'contact@urjionix.com',
-              detail: 'Response within 24 hours',
-            },
-            {
-              label: 'Hardware & Robotics Store',
-              value: 'shop.urjionix.com',
-              detail: 'Edge Tech Robotics — development kits',
-            },
-            {
-              label: 'Location',
-              value: 'India',
-              detail: 'Deployments: Nationwide + SEA',
-            },
-          ].map(({ label, value, detail }) => (
-            <div
-              key={label}
-              style={{
-                marginBottom: '2rem',
-                paddingBottom: '2rem',
-                borderBottom: '1px solid rgba(161,161,161,0.07)',
-              }}
-            >
-              <p
-                style={{
-                  fontFamily: '"JetBrains Mono", monospace',
-                  fontSize: '0.58rem',
-                  letterSpacing: '0.2em',
-                  color: '#D4AF37',
-                  marginBottom: '0.4rem',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {label}
-              </p>
-              <p style={{ fontSize: '0.9rem', color: '#ffffff', marginBottom: '0.2rem' }}>{value}</p>
-              <p style={{ fontSize: '0.75rem', color: '#6C6C6C', fontFamily: '"JetBrains Mono", monospace' }}>
-                {detail}
-              </p>
-            </div>
-          ))}
+          {/* ── Left: info ──────────────────────────────────────────── */}
+          <div class="gsap-hidden">
+            <InfoBlock icon="✉" label="General Enquiries"       value="contact@urjionix.com"    sub="Response within 24 hours" />
+            <InfoBlock icon="📞" label="Phone"                   value="+91 XXXXX XXXXX"         sub="Mon–Sat, 10am–7pm IST" />
+            <InfoBlock icon="⚡" label="Hardware & Robotics"     value="edgetechrobotics.com"    sub="Edge Tech Robotics — dev kits" />
+            <InfoBlock icon="📍" label="Location"                value="India"                   sub="Deployments: Nationwide + SEA" />
 
-          {/* Engagement types */}
-          <div style={{ marginTop: '2rem' }}>
-            <p
-              style={{
+            {/* What we work on */}
+            <div style={{ marginTop: '2.5rem' }}>
+              <p style={{
                 fontFamily: '"JetBrains Mono", monospace',
-                fontSize: '0.58rem',
-                letterSpacing: '0.2em',
-                color: '#6C6C6C',
-                marginBottom: '1rem',
-                textTransform: 'uppercase',
-              }}
-            >
-              We work on
-            </p>
-            {[
-              'Custom Edge AI System Design',
-              'Jetson-based Deployment Contracts',
-              'Data Compliance Pipeline Builds',
-              'Hardware Kit OEM / White-label',
-              'Technical Advisory & Architecture Review',
-            ].map((item) => (
-              <div
-                key={item}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '10px',
-                  marginBottom: '0.6rem',
-                  fontSize: '0.82rem',
-                  color: '#A1A1A1',
-                }}
-              >
-                <span style={{ color: '#D4AF37', flexShrink: 0 }}>→</span>
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Right — Form ─────────────────────────────────────── */}
-        <div
-          class="gsap-hidden"
-          style={{
-            background: '#161718',
-            border: '1px solid rgba(161,161,161,0.1)',
-            padding: 'clamp(2rem, 4vw, 3.5rem)',
-            position: 'relative',
-          }}
-        >
-          {/* Gold top accent */}
-          <div
-            style={{
-              position: 'absolute',
-              top: 0, left: 0, right: 0,
-              height: '1px',
-              background: 'linear-gradient(90deg, transparent, #D4AF37, transparent)',
-              opacity: 0.5,
-            }}
-          />
-
-          {sent ? (
-            <div style={{ textAlign: 'center', padding: '3rem 0' }}>
-              <div
-                style={{
-                  width: '48px',
-                  height: '48px',
-                  border: '1px solid #D4AF37',
-                  borderRadius: '50%',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  margin: '0 auto 1.5rem',
-                  color: '#D4AF37',
-                  fontSize: '1.2rem',
-                }}
-              >
-                ✓
-              </div>
-              <h3
-                style={{
-                  fontFamily: '"Inter Tight", sans-serif',
-                  fontWeight: 700,
-                  fontSize: '1.3rem',
-                  color: '#ffffff',
-                  marginBottom: '0.75rem',
-                }}
-              >
-                Message Received
-              </h3>
-              <p style={{ fontSize: '0.85rem', color: '#A1A1A1', lineHeight: 1.7 }}>
-                We'll review your enquiry and respond within 24 hours.
+                fontSize: '0.52rem', letterSpacing: '0.2em',
+                color: '#444', textTransform: 'uppercase', marginBottom: '1.25rem',
+              }}>
+                What we work on
               </p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.7rem' }}>
+                {[
+                  'Custom AI System Design',
+                  'Robotics & Autonomous Systems',
+                  'Smart Surveillance & Traffic Systems',
+                  'Retail & Mall Intelligence',
+                  'Edge Compute Deployments',
+                  'Hardware OEM & White-label',
+                  'Technical Advisory & Architecture',
+                ].map((item, i) => (
+                  <div key={i} style={{
+                    display: 'flex', alignItems: 'center', gap: '12px',
+                    padding: '0.6rem 0.9rem',
+                    border: '1px solid rgba(161,161,161,0.07)',
+                    borderLeft: `2px solid ${GOLD_A(0.35)}`,
+                    background: GOLD_A(0.02),
+                    borderRadius: '0 2px 2px 0',
+                    fontSize: '0.82rem', color: '#A1A1A1',
+                  }}>
+                    <span style={{ color: GOLD, fontSize: '0.6rem' }}>◆</span>
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <p
-                style={{
-                  fontFamily: '"JetBrains Mono", monospace',
-                  fontSize: '0.58rem',
-                  letterSpacing: '0.2em',
-                  color: '#D4AF37',
-                  marginBottom: '2rem',
-                  textTransform: 'uppercase',
-                }}
-              >
-                Custom AI & Engineering Enquiry
-              </p>
+          </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
-                <div style={{ gridColumn: '1' }}>
-                  <Field label="Full Name"     name="name"         required placeholder="Your name" />
-                </div>
-                <div style={{ gridColumn: '2' }}>
-                  <Field label="Organisation"  name="org"          placeholder="Company / Institution" />
-                </div>
-              </div>
+          {/* ── Right: form ─────────────────────────────────────────── */}
+          <div class="gsap-hidden" style={{ position: 'relative' }}>
+            {/* Outer glow */}
+            <div style={{
+              position: 'absolute', inset: '-1px',
+              background: `linear-gradient(135deg, ${GOLD_A(0.2)}, transparent 50%, ${GOLD_A(0.1)})`,
+              borderRadius: '4px', zIndex: 0,
+            }} />
 
-              <Field label="Email Address"     name="email"        type="email" required placeholder="your@email.com" />
-              <Field label="Phone (optional)"  name="phone"        type="tel"   placeholder="+91 ..." />
+            <div style={{
+              position: 'relative', zIndex: 1,
+              background: '#111214',
+              border: '1px solid rgba(161,161,161,0.1)',
+              borderRadius: '4px',
+              padding: 'clamp(2rem,4vw,3rem)',
+              overflow: 'hidden',
+            }}>
+              {/* Corner decorations */}
+              <Corner pos="tl" /><Corner pos="tr" /><Corner pos="br" /><Corner pos="bl" />
 
-              {/* Engagement type select */}
-              <div style={{ marginBottom: '2.2rem' }}>
-                <label
-                  style={{
-                    display: 'block',
-                    fontFamily: '"JetBrains Mono", monospace',
-                    fontSize: '0.58rem',
-                    letterSpacing: '0.2em',
-                    color: '#6C6C6C',
-                    marginBottom: '0.5rem',
-                    textTransform: 'uppercase',
-                  }}
-                >
-                  Engagement Type
-                </label>
-                <select
-                  name="type"
-                  style={{
-                    width: '100%',
-                    background: '#0B0C0E',
-                    border: 'none',
-                    borderBottom: '1px solid rgba(161,161,161,0.25)',
-                    padding: '0.75rem 0',
-                    color: '#A1A1A1',
+              {/* Top gold line */}
+              <div style={{
+                position: 'absolute', top: 0, left: 0, right: 0, height: '2px',
+                background: `linear-gradient(90deg, transparent, ${GOLD}, transparent)`,
+                opacity: 0.6,
+              }} />
+
+              {sent ? (
+                <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                  <div style={{
+                    width: '56px', height: '56px',
+                    border: `1px solid ${GOLD}`,
+                    borderRadius: '50%',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 1.5rem',
+                    color: GOLD, fontSize: '1.4rem',
+                    boxShadow: `0 0 24px ${GOLD_A(0.2)}`,
+                  }}>✓</div>
+                  <h3 style={{
                     fontFamily: '"Inter Tight", sans-serif',
-                    fontSize: '0.88rem',
-                    outline: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <option value="">Select...</option>
-                  <option value="edge-ai">Edge AI System Design</option>
-                  <option value="jetson">Jetson Deployment Contract</option>
-                  <option value="compliance">Data Compliance Pipeline</option>
-                  <option value="hardware">Hardware Kit / OEM</option>
-                  <option value="advisory">Technical Advisory</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
+                    fontWeight: 700, fontSize: '1.4rem', color: '#fff', marginBottom: '0.75rem',
+                  }}>Message Received</h3>
+                  <p style={{ fontSize: '0.85rem', color: '#6C6C6C', lineHeight: 1.8 }}>
+                    We'll review your enquiry and respond within 24 hours.
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit}>
+                  {/* Form header */}
+                  <div style={{
+                    display: 'flex', alignItems: 'center', gap: '10px',
+                    marginBottom: '2.5rem', paddingBottom: '1.25rem',
+                    borderBottom: '1px solid rgba(161,161,161,0.08)',
+                  }}>
+                    <div style={{
+                      width: '8px', height: '8px', borderRadius: '50%',
+                      background: GOLD, boxShadow: `0 0 8px ${GOLD}`,
+                    }} />
+                    <p style={{
+                      fontFamily: '"JetBrains Mono", monospace',
+                      fontSize: '0.58rem', letterSpacing: '0.2em',
+                      color: GOLD, textTransform: 'uppercase',
+                    }}>
+                      New Enquiry — Urjionix Technologies
+                    </p>
+                  </div>
 
-              <Field
-                label="Project Brief"
-                name="brief"
-                required
-                multiline
-                placeholder="Describe your challenge, scale, and timeline..."
-              />
+                  {/* Name + Org row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 2rem' }}>
+                    <Field label="Full Name"    name="name"  required placeholder="Your name" />
+                    <Field label="Organisation" name="org"            placeholder="Company / Institution" />
+                  </div>
 
-              <button
-                type="submit"
-                class="btn-gold"
-                style={{ width: '100%', textAlign: 'center', fontSize: '0.75rem', padding: '1.1rem' }}
-              >
-                Submit Enquiry →
-              </button>
+                  <Field label="Email Address"   name="email" type="email" required placeholder="your@email.com" />
+                  <Field label="Phone (optional)" name="phone" type="tel"             placeholder="+91 ..." />
 
-              <p
-                style={{
-                  fontFamily: '"JetBrains Mono", monospace',
-                  fontSize: '0.55rem',
-                  letterSpacing: '0.1em',
-                  color: '#3C3C3C',
-                  marginTop: '1rem',
-                  textAlign: 'center',
-                }}
-              >
-                YOUR DATA IS NEVER SHARED — URJIONIX TECHNOLOGIES PVT LTD
-              </p>
-            </form>
-          )}
+                  {/* Engagement type */}
+                  <div style={{ marginBottom: '2rem' }}>
+                    <label style={{
+                      display: 'block',
+                      fontFamily: '"JetBrains Mono", monospace',
+                      fontSize: '0.55rem', letterSpacing: '0.2em',
+                      color: selectFocused ? GOLD : '#555',
+                      marginBottom: '0.4rem', textTransform: 'uppercase',
+                      transition: 'color 0.25s',
+                    }}>
+                      Engagement Type
+                    </label>
+                    <select name="type"
+                      onFocus={() => setSelectFocused(true)}
+                      onBlur={() => setSelectFocused(false)}
+                      style={{
+                        width: '100%',
+                        background: '#0B0C0E',
+                        border: 'none',
+                        borderBottom: `1px solid ${selectFocused ? GOLD : 'rgba(161,161,161,0.18)'}`,
+                        padding: '0.7rem 0',
+                        color: '#A1A1A1',
+                        fontFamily: '"Inter Tight", sans-serif',
+                        fontSize: '0.88rem',
+                        outline: 'none',
+                        cursor: 'pointer',
+                        transition: 'border-color 0.25s',
+                        boxSizing: 'border-box',
+                      }}>
+                      <option value="">Select...</option>
+                      <option value="robotics">Robotics & Autonomous Systems</option>
+                      <option value="edge-ai">Edge AI System Design</option>
+                      <option value="surveillance">Smart Surveillance / Traffic</option>
+                      <option value="retail">Retail & Mall Intelligence</option>
+                      <option value="hardware">Hardware Kit / OEM</option>
+                      <option value="advisory">Technical Advisory</option>
+                      <option value="other">Other</option>
+                    </select>
+                  </div>
+
+                  <Field label="Project Brief" name="brief" required multiline
+                    placeholder="Describe your challenge, environment, and timeline..." />
+
+                  <button type="submit" class="btn-gold"
+                    style={{ width: '100%', textAlign: 'center', fontSize: '0.75rem', padding: '1.1rem', marginTop: '0.5rem' }}>
+                    Submit Enquiry →
+                  </button>
+
+                  <p style={{
+                    fontFamily: '"JetBrains Mono", monospace',
+                    fontSize: '0.5rem', letterSpacing: '0.1em',
+                    color: '#2E2E2E', marginTop: '1rem', textAlign: 'center',
+                  }}>
+                    YOUR DATA IS NEVER SHARED — URJIONIX TECHNOLOGIES PVT LTD
+                  </p>
+                </form>
+              )}
+            </div>
+          </div>
+
         </div>
-        </div>{/* end contact-grid */}
       </section>
     </main>
   )

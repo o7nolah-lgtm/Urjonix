@@ -80,7 +80,7 @@ export function Header() {
               marginTop: '-1px',
               whiteSpace: 'nowrap',
             }}>
-              BUILD. FAST. SCALE.
+              AI · ROBOTICS · EDGE
             </div>
           </div>
         </Link>
