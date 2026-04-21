@@ -197,8 +197,8 @@ export function Contact() {
 
           {/* ── Left: info ──────────────────────────────────────────── */}
           <div class="gsap-hidden">
-            <InfoBlock icon="✉" label="General Enquiries"   value="contact@urjionix.com"  sub="Response within 24 hours"     href="mailto:contact@urjionix.com" />
-            <InfoBlock icon="📞" label="Phone"              value="+91 XXXXX XXXXX"       sub="Mon–Sat, 10am–7pm IST"        href="https://wa.me/91XXXXXXXXXX" />
+            <InfoBlock icon="✉" label="General Enquiries"   value="contact@urjionixtechnologies.com"  sub="Response within 24 hours"     href="mailto:contact@urjionixtechnologies.com" />
+            <InfoBlock icon="📞" label="Phone"              value="+91 8076569592"       sub="Mon–Sat, 10am–7pm IST"        href="https://wa.me/918076569592" />
             <InfoBlock icon="⚡" label="Hardware & Robotics" value="edgetechrobotics.com" sub="Edge Tech Robotics — dev kits" href="https://edgetechrobotics.com" />
             <InfoBlock icon="📍" label="Location"            value="India"                sub="Deployments: Nationwide + SEA" href="https://maps.google.com/?q=India" />
 

@@ -150,8 +150,8 @@ export function Footer() {
               Contact
             </p>
             {[
-              { label: 'contact@urjionix.com',      href: 'mailto:contact@urjionix.com' },
-              { label: '+91 XXXXX XXXXX',            href: 'https://wa.me/91XXXXXXXXXX' },
+              { label: 'contact@urjionixtechnologies.com',      href: 'mailto:contact@urjionixtechnologies.com' },
+              { label: '+91 8076569592',            href: 'https://wa.me/918076569592' },
               { label: 'India',                      href: 'https://maps.google.com/?q=India' },
             ].map(({ label, href }) => (
               <a key={href} href={href} target="_blank" rel="noopener noreferrer"
