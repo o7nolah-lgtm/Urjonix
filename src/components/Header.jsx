@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'preact/hooks'
 import { Link, useLocation } from 'wouter'
+import { ThemeToggle } from './ThemeToggle.jsx'
+import { useTheme } from '../context/ThemeContext.jsx'
 
 const NAV_LINKS = [
   { label: 'Home', href: '/' },
@@ -11,6 +13,7 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [location] = useLocation()
+  const { isDark } = useTheme()
   const headerRef = useRef(null)
 
   useEffect(() => {
@@ -19,7 +22,6 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => setMenuOpen(false), [location])
 
   return (
@@ -30,10 +32,8 @@ export function Header() {
         top: 0, left: 0, right: 0,
         zIndex: 1000,
         transition: 'background 0.4s ease, border-color 0.4s ease',
-        background: scrolled
-          ? 'rgba(11,12,14,0.97)'
-          : 'rgba(11,12,14,0.88)',
-        borderBottom: '1px solid rgba(161,161,161,0.1)',
+        background: scrolled ? 'var(--clr-header-scroll)' : 'var(--clr-header)',
+        borderBottom: '1px solid var(--clr-border)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
       }}
@@ -56,7 +56,11 @@ export function Header() {
           <img
             src="/logo.png"
             alt="Urjionix logo"
-            style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'lighten', flexShrink: 0 }}
+            style={{
+              width: '36px', height: '36px', objectFit: 'contain',
+              mixBlendMode: isDark ? 'lighten' : 'multiply',
+              flexShrink: 0,
+            }}
           />
           <div>
             <div style={{
@@ -76,7 +80,7 @@ export function Header() {
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '0.5rem',
               letterSpacing: '0.2em',
-              color: '#6C6C6C',
+              color: 'var(--clr-muted-text)',
               marginTop: '-1px',
               whiteSpace: 'nowrap',
             }}>
@@ -96,13 +100,13 @@ export function Header() {
                 fontSize: '0.8rem',
                 letterSpacing: '0.06em',
                 textDecoration: 'none',
-                color: location === href ? '#D4AF37' : '#A1A1A1',
+                color: location === href ? '#D4AF37' : 'var(--clr-sub)',
                 transition: 'color 0.2s ease',
                 position: 'relative',
                 paddingBottom: '2px',
               }}
-              onMouseEnter={e => { if (location !== href) e.target.style.color = '#ffffff' }}
-              onMouseLeave={e => { if (location !== href) e.target.style.color = '#A1A1A1' }}
+              onMouseEnter={e => { if (location !== href) e.target.style.color = 'var(--clr-text)' }}
+              onMouseLeave={e => { if (location !== href) e.target.style.color = 'var(--clr-sub)' }}
             >
               {label}
               {location === href && (
@@ -120,6 +124,9 @@ export function Header() {
             </Link>
           ))}
 
+          {/* Theme toggle */}
+          <ThemeToggle />
+
           {/* Edge Tech Robotics CTA */}
           <a
             href="https://edgetechrobotics.com"
@@ -131,8 +138,8 @@ export function Header() {
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               textDecoration: 'none',
-              color: '#C0C0C0',
-              border: '1px solid rgba(192,192,192,0.35)',
+              color: 'var(--clr-light)',
+              border: '1px solid var(--clr-border)',
               padding: '0.5rem 1.2rem',
               transition: 'all 0.3s ease',
               display: 'flex',
@@ -140,14 +147,14 @@ export function Header() {
               gap: '8px',
             }}
             onMouseEnter={e => {
-              e.currentTarget.style.borderColor = '#C0C0C0'
+              e.currentTarget.style.borderColor = 'rgba(192,192,192,0.6)'
               e.currentTarget.style.background = 'rgba(192,192,192,0.06)'
-              e.currentTarget.style.color = '#ffffff'
+              e.currentTarget.style.color = 'var(--clr-text)'
             }}
             onMouseLeave={e => {
-              e.currentTarget.style.borderColor = 'rgba(192,192,192,0.35)'
+              e.currentTarget.style.borderColor = 'var(--clr-border)'
               e.currentTarget.style.background = 'transparent'
-              e.currentTarget.style.color = '#C0C0C0'
+              e.currentTarget.style.color = 'var(--clr-light)'
             }}
           >
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
@@ -158,46 +165,51 @@ export function Header() {
           </a>
         </nav>
 
-        {/* ── Mobile Hamburger ── */}
-        <button
-          class="mobile-burger"
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{
-            background: 'none',
-            border: '1px solid rgba(161,161,161,0.3)',
-            padding: '8px',
-            cursor: 'pointer',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '5px',
-          }}
-          aria-label="Toggle menu"
-        >
-          {[0, 1, 2].map(i => (
-            <span
-              key={i}
-              style={{
-                display: 'block',
-                width: '20px',
-                height: '1px',
-                background: '#D4AF37',
-                transition: 'all 0.3s ease',
-                transform:
-                  menuOpen && i === 0 ? 'rotate(45deg) translateY(6px)' :
-                    menuOpen && i === 2 ? 'rotate(-45deg) translateY(-6px)' :
-                      menuOpen && i === 1 ? 'scaleX(0)' : 'none',
-              }}
-            />
-          ))}
-        </button>
+        {/* ── Mobile: toggle + hamburger ── */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div class="mobile-burger">
+            <ThemeToggle />
+          </div>
+          <button
+            class="mobile-burger"
+            onClick={() => setMenuOpen(!menuOpen)}
+            style={{
+              background: 'none',
+              border: '1px solid var(--clr-border)',
+              padding: '8px',
+              cursor: 'pointer',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '5px',
+            }}
+            aria-label="Toggle menu"
+          >
+            {[0, 1, 2].map(i => (
+              <span
+                key={i}
+                style={{
+                  display: 'block',
+                  width: '20px',
+                  height: '1px',
+                  background: '#D4AF37',
+                  transition: 'all 0.3s ease',
+                  transform:
+                    menuOpen && i === 0 ? 'rotate(45deg) translateY(6px)' :
+                      menuOpen && i === 2 ? 'rotate(-45deg) translateY(-6px)' :
+                        menuOpen && i === 1 ? 'scaleX(0)' : 'none',
+                }}
+              />
+            ))}
+          </button>
+        </div>
       </div>
 
       {/* ── Mobile Menu ── */}
       {menuOpen && (
         <div
           style={{
-            background: 'rgba(11,12,14,0.98)',
-            borderTop: '1px solid rgba(161,161,161,0.12)',
+            background: 'var(--clr-mobile-menu)',
+            borderTop: '1px solid var(--clr-border)',
             padding: '1.5rem 2rem 2rem',
           }}
         >
@@ -208,12 +220,12 @@ export function Header() {
               style={{
                 display: 'block',
                 padding: '1.1rem 0',
-                borderBottom: '1px solid rgba(255,255,255,0.05)',
+                borderBottom: '1px solid var(--clr-border-faint)',
                 fontFamily: '"Inter Tight", sans-serif',
                 fontSize: '1rem',
                 letterSpacing: '0.04em',
                 textDecoration: 'none',
-                color: location === href ? '#D4AF37' : '#A1A1A1',
+                color: location === href ? '#D4AF37' : 'var(--clr-sub)',
               }}
             >
               {label}
@@ -231,8 +243,8 @@ export function Header() {
               letterSpacing: '0.14em',
               textTransform: 'uppercase',
               textDecoration: 'none',
-              color: '#C0C0C0',
-              border: '1px solid rgba(192,192,192,0.35)',
+              color: 'var(--clr-light)',
+              border: '1px solid var(--clr-border)',
               padding: '0.6rem 1.2rem',
             }}
           >

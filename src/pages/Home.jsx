@@ -43,14 +43,15 @@ const TICKER_ITEMS = [
 ]
 
 function Marquee() {
-  const items = [...TICKER_ITEMS, ...TICKER_ITEMS] // duplicate for seamless loop
+  const items = [...TICKER_ITEMS, ...TICKER_ITEMS]
   return (
     <div style={{
-      borderTop: '1px solid rgba(161,161,161,0.08)',
-      borderBottom: '1px solid rgba(161,161,161,0.08)',
-      background: '#0D0E10',
+      borderTop: '1px solid var(--clr-border-dim)',
+      borderBottom: '1px solid var(--clr-border-dim)',
+      background: 'var(--clr-muted)',
       overflow: 'hidden',
       padding: '14px 0',
+      transition: 'background 0.35s ease',
     }}>
       <div class="marquee-track">
         {items.map((item, i) => (
@@ -59,7 +60,7 @@ function Marquee() {
             padding: '0 2.5rem',
             fontFamily: '"JetBrains Mono", monospace',
             fontSize: '0.58rem', letterSpacing: '0.22em',
-            color: i % 4 === 0 ? GOLD : 'rgba(161,161,161,0.35)',
+            color: i % 4 === 0 ? GOLD : 'var(--clr-ticker-dim)',
             textTransform: 'uppercase', whiteSpace: 'nowrap',
           }}>
             {item}
@@ -84,7 +85,7 @@ const OLD_VS_NEW = [
 function CompareSection() {
   return (
     <section style={{
-      borderTop: '1px solid rgba(161,161,161,0.08)',
+      borderTop: '1px solid var(--clr-border-dim)',
       padding: 'clamp(4rem,10vw,7rem) clamp(1.5rem,8vw,8rem)',
       maxWidth: '1400px', margin: '0 auto',
     }}>
@@ -92,7 +93,7 @@ function CompareSection() {
       <h2 class="gsap-hidden" style={{
         fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
         fontSize: 'clamp(1.8rem,4vw,3rem)', letterSpacing: '-0.03em',
-        color: '#fff', lineHeight: 1.1, marginBottom: '3rem',
+        color: 'var(--clr-text)', lineHeight: 1.1, marginBottom: '3rem',
       }}>
         The old way is{' '}
         <span style={{
@@ -103,7 +104,7 @@ function CompareSection() {
         </span>
       </h2>
 
-      {/* Mobile — just the Urjionix Way as a clean checklist */}
+      {/* Mobile — just the Urjionix Way */}
       <div class="gsap-hidden compare-mobile">
         <p style={{
           fontFamily: '"JetBrains Mono", monospace', fontSize: '0.52rem',
@@ -120,7 +121,7 @@ function CompareSection() {
             borderRadius: '2px',
           }}>
             <span style={{ color: GOLD, fontSize: '0.75rem', flexShrink: 0, marginTop: '1px' }}>✓</span>
-            <p style={{ fontSize: '0.85rem', color: '#C0C0C0', lineHeight: 1.5 }}>{neo}</p>
+            <p style={{ fontSize: '0.85rem', color: 'var(--clr-light)', lineHeight: 1.5 }}>{neo}</p>
           </div>
         ))}
       </div>
@@ -129,12 +130,12 @@ function CompareSection() {
       <div class="gsap-hidden compare-grid">
         {/* Header row */}
         <div style={{
-          background: '#161718', padding: '1rem 1.5rem',
+          background: 'var(--clr-surf)', padding: '1rem 1.5rem',
           borderBottom: `1px solid ${GOLD_A(0.15)}`,
         }}>
           <p style={{
             fontFamily: '"JetBrains Mono", monospace', fontSize: '0.58rem',
-            letterSpacing: '0.2em', color: '#555', textTransform: 'uppercase',
+            letterSpacing: '0.2em', color: 'var(--clr-faint)', textTransform: 'uppercase',
           }}>The Old Way</p>
         </div>
         <div style={{
@@ -152,21 +153,21 @@ function CompareSection() {
         {OLD_VS_NEW.map(([old, neo], i) => (
           <>
             <div key={`old-${i}`} style={{
-              background: '#111214', padding: '1.1rem 1.5rem',
-              borderBottom: '1px solid rgba(161,161,161,0.05)',
+              background: 'var(--clr-surf2)', padding: '1.1rem 1.5rem',
+              borderBottom: '1px solid var(--clr-border-faint)',
               display: 'flex', alignItems: 'center', gap: '12px',
             }}>
-              <span style={{ color: '#3C3C3C', fontSize: '0.7rem', flexShrink: 0 }}>✕</span>
-              <p style={{ fontSize: '0.83rem', color: '#555', lineHeight: 1.5 }}>{old}</p>
+              <span style={{ color: 'var(--clr-dim)', fontSize: '0.7rem', flexShrink: 0 }}>✕</span>
+              <p style={{ fontSize: '0.83rem', color: 'var(--clr-faint)', lineHeight: 1.5 }}>{old}</p>
             </div>
             <div key={`new-${i}`} style={{
               background: GOLD_A(0.03), padding: '1.1rem 1.5rem',
-              borderBottom: '1px solid rgba(161,161,161,0.05)',
+              borderBottom: '1px solid var(--clr-border-faint)',
               borderLeft: `2px solid ${GOLD_A(0.2)}`,
               display: 'flex', alignItems: 'center', gap: '12px',
             }}>
               <span style={{ color: GOLD, fontSize: '0.7rem', flexShrink: 0 }}>✓</span>
-              <p style={{ fontSize: '0.83rem', color: '#C0C0C0', lineHeight: 1.5 }}>{neo}</p>
+              <p style={{ fontSize: '0.83rem', color: 'var(--clr-light)', lineHeight: 1.5 }}>{neo}</p>
             </div>
           </>
         ))}
@@ -196,7 +197,7 @@ const INDUSTRIES = [
 function IndustriesSection() {
   return (
     <section style={{
-      borderTop: '1px solid rgba(161,161,161,0.08)',
+      borderTop: '1px solid var(--clr-border-dim)',
       padding: 'clamp(3rem,8vw,6rem) clamp(1.5rem,8vw,8rem)',
       maxWidth: '1400px', margin: '0 auto',
     }}>
@@ -204,7 +205,7 @@ function IndustriesSection() {
       <h2 class="gsap-hidden" style={{
         fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
         fontSize: 'clamp(1.6rem,3vw,2.6rem)', letterSpacing: '-0.02em',
-        color: '#fff', marginBottom: '2.5rem',
+        color: 'var(--clr-text)', marginBottom: '2.5rem',
       }}>
         Built for the Real World.
       </h2>
@@ -216,19 +217,19 @@ function IndustriesSection() {
       }}>
         {INDUSTRIES.map(({ icon, label }) => (
           <div key={label} style={{
-            background: '#111214', padding: '1.75rem 1.25rem',
+            background: 'var(--clr-surf2)', padding: '1.75rem 1.25rem',
             display: 'flex', flexDirection: 'column', alignItems: 'center',
             gap: '0.75rem', transition: 'background 0.2s',
             cursor: 'default',
           }}
           onMouseEnter={e => e.currentTarget.style.background = GOLD_A(0.06)}
-          onMouseLeave={e => e.currentTarget.style.background = '#111214'}
+          onMouseLeave={e => e.currentTarget.style.background = 'var(--clr-surf2)'}
           >
             <span style={{ lineHeight: 1 }}>{icon}</span>
             <p style={{
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '0.56rem', letterSpacing: '0.16em',
-              color: '#6C6C6C', textTransform: 'uppercase', textAlign: 'center',
+              color: 'var(--clr-muted-text)', textTransform: 'uppercase', textAlign: 'center',
             }}>{label}</p>
           </div>
         ))}
@@ -253,21 +254,20 @@ function TechStackSection() {
   const doubled = [...STACK, ...STACK]
   return (
     <section style={{
-      background: '#0D0E10',
-      borderTop: '1px solid rgba(161,161,161,0.08)',
-      borderBottom: '1px solid rgba(161,161,161,0.08)',
+      background: 'var(--clr-muted)',
+      borderTop: '1px solid var(--clr-border-dim)',
+      borderBottom: '1px solid var(--clr-border-dim)',
       padding: '2rem 0',
       overflow: 'hidden',
+      transition: 'background 0.35s ease',
     }}>
-      {/* Label */}
       <p style={{
         fontFamily: '"JetBrains Mono", monospace',
         fontSize: '0.52rem', letterSpacing: '0.22em',
-        color: '#333', textTransform: 'uppercase',
+        color: 'var(--clr-very-dim)', textTransform: 'uppercase',
         textAlign: 'center', marginBottom: '1.25rem',
       }}>Built On</p>
 
-      {/* Scrolling badge row */}
       <div style={{ overflow: 'hidden' }}>
         <div class="marquee-track" style={{ animationDuration: '35s' }}>
           {doubled.map(({ name, sub }, i) => (
@@ -282,7 +282,7 @@ function TechStackSection() {
             }}>
               <span style={{
                 fontFamily: '"Inter Tight", sans-serif', fontWeight: 700,
-                fontSize: '0.85rem', color: '#fff', whiteSpace: 'nowrap',
+                fontSize: '0.85rem', color: 'var(--clr-text)', whiteSpace: 'nowrap',
               }}>{name}</span>
               <span style={{
                 fontFamily: '"JetBrains Mono", monospace',
@@ -301,7 +301,7 @@ function TechStackSection() {
 function DemoTeaser() {
   return (
     <section style={{
-      borderTop: '1px solid rgba(161,161,161,0.08)',
+      borderTop: '1px solid var(--clr-border-dim)',
       padding: 'clamp(3rem,8vw,6rem) clamp(1.5rem,8vw,8rem)',
       maxWidth: '1400px', margin: '0 auto',
     }}>
@@ -312,17 +312,16 @@ function DemoTeaser() {
         <div style={{ position: 'relative', lineHeight: 0, borderRadius: '4px', overflow: 'hidden', border: `1px solid ${GOLD_A(0.18)}` }}>
           <img src="/traffic-after.png" alt="AI detection demo" draggable={false}
             style={{ display: 'block', width: '100%', height: 'auto', opacity: 0.85 }} />
-          {/* Overlay */}
           <div style={{
             position: 'absolute', inset: 0,
-            background: 'linear-gradient(to top, rgba(11,12,14,0.7) 0%, transparent 50%)',
+            background: 'linear-gradient(to top, rgba(var(--clr-bg-rgb),0.7) 0%, transparent 50%)',
             pointerEvents: 'none',
           }} />
           <div style={{
             position: 'absolute', bottom: '14px', left: '14px',
             fontFamily: '"JetBrains Mono", monospace', fontSize: '0.55rem',
             letterSpacing: '0.16em', color: GOLD,
-            background: 'rgba(11,12,14,0.75)', padding: '4px 10px', borderRadius: '2px',
+            background: 'rgba(var(--clr-bg-rgb),0.75)', padding: '4px 10px', borderRadius: '2px',
             border: `1px solid ${GOLD_A(0.3)}`, textTransform: 'uppercase',
           }}>Live AI Demo</div>
         </div>
@@ -336,7 +335,7 @@ function DemoTeaser() {
           <h2 style={{
             fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
             fontSize: 'clamp(1.6rem,3vw,2.4rem)', letterSpacing: '-0.025em',
-            color: '#fff', lineHeight: 1.15, marginBottom: '1rem',
+            color: 'var(--clr-text)', lineHeight: 1.15, marginBottom: '1rem',
           }}>
             Watch the AI work.<br />
             <span style={{
@@ -345,7 +344,7 @@ function DemoTeaser() {
             }}>Then drag the slider.</span>
           </h2>
           <p style={{
-            fontSize: '0.88rem', color: '#6C6C6C', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '400px',
+            fontSize: '0.88rem', color: 'var(--clr-muted-text)', lineHeight: 1.8, marginBottom: '2rem', maxWidth: '400px',
           }}>
             Our Capabilities page has live before/after showcases for traffic management
             and retail intelligence — real deployments, real AI output.
@@ -415,7 +414,7 @@ export function Home() {
           <p class="hero-sub" style={{
             fontFamily: '"JetBrains Mono", monospace',
             fontSize: 'clamp(0.65rem, 1.5vw, 0.85rem)',
-            color: '#A1A1A1', lineHeight: 1.9,
+            color: 'var(--clr-sub)', lineHeight: 1.9,
             maxWidth: '480px', marginBottom: '2.5rem',
           }}>
             We build AI and Robotics systems that work in the real world —
@@ -442,7 +441,7 @@ export function Home() {
             }} />
             <span style={{
               fontFamily: '"JetBrains Mono", monospace', fontSize: '0.58rem',
-              letterSpacing: '0.2em', color: '#6C6C6C',
+              letterSpacing: '0.2em', color: 'var(--clr-muted-text)',
             }}>SCROLL</span>
           </div>
         </div>
@@ -451,14 +450,14 @@ export function Home() {
           <HeroCanvas />
           <div style={{
             position: 'absolute', top: 0, left: 0, bottom: 0, width: '60px',
-            background: 'linear-gradient(90deg, #0B0C0E, transparent)',
+            background: 'linear-gradient(90deg, var(--clr-bg), transparent)',
             pointerEvents: 'none', zIndex: 2,
           }} />
         </div>
 
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, height: '100px',
-          background: 'linear-gradient(0deg, #0B0C0E, transparent)',
+          background: 'linear-gradient(0deg, var(--clr-bg), transparent)',
           pointerEvents: 'none', zIndex: 3, gridColumn: '1 / -1',
         }} />
       </section>
@@ -484,23 +483,19 @@ export function Home() {
             filter: 'brightness(0.45) saturate(0.7)',
           }}
         />
-        {/* Left-to-right fade overlay */}
         <div style={{
           position: 'absolute', inset: 0,
-          background: 'linear-gradient(90deg, rgba(11,12,14,0.92) 0%, rgba(11,12,14,0.5) 50%, rgba(11,12,14,0.1) 100%)',
+          background: 'linear-gradient(90deg, rgba(var(--clr-bg-rgb),0.92) 0%, rgba(var(--clr-bg-rgb),0.5) 50%, rgba(var(--clr-bg-rgb),0.1) 100%)',
         }} />
-        {/* Bottom fade */}
         <div style={{
           position: 'absolute', bottom: 0, left: 0, right: 0, height: '120px',
-          background: 'linear-gradient(0deg, #0B0C0E, transparent)',
+          background: 'linear-gradient(0deg, var(--clr-bg), transparent)',
         }} />
-        {/* Top fade */}
         <div style={{
           position: 'absolute', top: 0, left: 0, right: 0, height: '80px',
-          background: 'linear-gradient(180deg, #0B0C0E, transparent)',
+          background: 'linear-gradient(180deg, var(--clr-bg), transparent)',
         }} />
 
-        {/* Text overlay */}
         <div style={{
           position: 'absolute', inset: 0,
           display: 'flex', flexDirection: 'column', justifyContent: 'center',
@@ -534,21 +529,21 @@ export function Home() {
       {/* ═════════════════════════════════════════════════ PROCESS CARDS */}
       <section class="section-px" style={{
         padding: 'clamp(3rem, 8vw, 6rem) clamp(1.5rem, 8vw, 8rem)',
-        borderTop: '1px solid rgba(161,161,161,0.06)',
+        borderTop: '1px solid var(--clr-border-sub)',
         maxWidth: '1400px', margin: '0 auto',
       }}>
         <div style={{ marginBottom: '3rem' }}>
           <ScrambleText text="HOW WE BUILD" class="gsap-hidden mono-label" style={{ display: 'block', marginBottom: '0.75rem' }} duration={800} />
           <h2 class="gsap-hidden" style={{
             fontFamily: '"Inter Tight", sans-serif', fontWeight: 700,
-            fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', letterSpacing: '-0.02em', color: '#ffffff',
+            fontSize: 'clamp(1.6rem, 3vw, 2.5rem)', letterSpacing: '-0.02em', color: 'var(--clr-text)',
           }}>
             The Three-Phase Loop
           </h2>
         </div>
         <div style={{
           display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1.5px', background: 'rgba(161,161,161,0.08)',
+          gap: '1.5px', background: 'var(--clr-border-dim)',
         }}>
           <ProcessCard step={1} title="Ideate & Prototype"
             description="From whiteboard to working AI or robotics prototype in one sprint. We validate the concept with real hardware before committing to production."
@@ -562,15 +557,21 @@ export function Home() {
         </div>
       </section>
 
+      {/* ═══════════════════════════════════════════════════ INDUSTRIES */}
+      <IndustriesSection />
+
+      {/* ══════════════════════════════════════════════════ TECH STACK */}
+      <TechStackSection />
 
       {/* ═══════════════════════════════════════════════════ DEMO TEASER */}
       <DemoTeaser />
 
       {/* ══════════════════════════════════════════════════════ PILLARS */}
       <section style={{
-        borderTop: '1px solid rgba(161,161,161,0.08)',
-        borderBottom: '1px solid rgba(161,161,161,0.08)',
-        background: '#161718',
+        borderTop: '1px solid var(--clr-border-dim)',
+        borderBottom: '1px solid var(--clr-border-dim)',
+        background: 'var(--clr-surf)',
+        transition: 'background 0.35s ease',
       }}>
         <div style={{
           maxWidth: '1400px', margin: '0 auto',
@@ -630,16 +631,16 @@ export function Home() {
             },
           ].map(({ icon, title, body }) => (
             <div key={title} class="gsap-hidden" style={{
-              borderRight: '1px solid rgba(161,161,161,0.08)',
+              borderRight: '1px solid var(--clr-border-dim)',
               padding: '2.5rem 2rem',
               display: 'flex', flexDirection: 'column', gap: '0.75rem',
             }}>
               <span style={{ lineHeight: 1 }}>{icon}</span>
               <p style={{
                 fontFamily: '"Inter Tight", sans-serif', fontWeight: 700,
-                fontSize: '1rem', color: '#fff', letterSpacing: '-0.01em',
+                fontSize: '1rem', color: 'var(--clr-text)', letterSpacing: '-0.01em',
               }}>{title}</p>
-              <p style={{ fontSize: '0.78rem', color: '#6C6C6C', lineHeight: 1.7 }}>{body}</p>
+              <p style={{ fontSize: '0.78rem', color: 'var(--clr-muted-text)', lineHeight: 1.7 }}>{body}</p>
             </div>
           ))}
         </div>
@@ -678,12 +679,12 @@ export function Home() {
             <ScrambleText text="GOT A DEPLOYMENT CHALLENGE?" style={{ display: 'block', marginBottom: '0.5rem', color: GOLD, fontSize: '0.65rem', letterSpacing: '0.2em' }} duration={1000} />
             <h2 style={{
               fontFamily: '"Inter Tight", sans-serif', fontWeight: 800,
-              fontSize: 'clamp(1.6rem, 3vw, 2.8rem)', letterSpacing: '-0.02em', color: '#fff',
+              fontSize: 'clamp(1.6rem, 3vw, 2.8rem)', letterSpacing: '-0.02em', color: 'var(--clr-text)',
               marginBottom: '0.5rem',
             }}>
               We scope it in 48 hours.
             </h2>
-            <p style={{ fontSize: '0.85rem', color: '#555', maxWidth: '360px', lineHeight: 1.7 }}>
+            <p style={{ fontSize: '0.85rem', color: 'var(--clr-faint)', maxWidth: '360px', lineHeight: 1.7 }}>
               Tell us your challenge — AI, Robotics, or Edge. We'll come back with a clear plan, fast.
             </p>
           </div>

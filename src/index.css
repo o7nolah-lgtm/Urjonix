@@ -2,12 +2,72 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme CSS variables ─────────────────────────────────────────────────── */
+:root {
+  --clr-bg:           #0B0C0E;
+  --clr-surf:         #161718;
+  --clr-surf2:        #111214;
+  --clr-muted:        #0D0E10;
+  --clr-deep:         #1A1C1E;
+  --clr-deeper:       #0F1012;
+  --clr-bg-rgb:       11, 12, 14;
+  --clr-text:         #ffffff;
+  --clr-sub:          #A1A1A1;
+  --clr-muted-text:   #6C6C6C;
+  --clr-dim:          #3C3C3C;
+  --clr-very-dim:     #333333;
+  --clr-faint:        #555555;
+  --clr-light:        #C0C0C0;
+  --clr-bright:       #E0E0E0;
+  --clr-med:          #7A7A7A;
+  --clr-border:       rgba(161,161,161,0.1);
+  --clr-border-dim:   rgba(161,161,161,0.08);
+  --clr-border-faint: rgba(161,161,161,0.05);
+  --clr-border-sub:   rgba(161,161,161,0.06);
+  --clr-header:       rgba(11,12,14,0.88);
+  --clr-header-scroll:rgba(11,12,14,0.97);
+  --clr-mobile-menu:  rgba(11,12,14,0.98);
+  --clr-ticker-dim:   rgba(161,161,161,0.35);
+  --clr-glass:        rgba(22,23,24,0.75);
+  --clr-glass-border: rgba(255,255,255,0.05);
+}
+
+html[data-theme="light"] {
+  --clr-bg:           #F5F4F0;
+  --clr-surf:         #EAEAE3;
+  --clr-surf2:        #E3E2DB;
+  --clr-muted:        #EEEDE7;
+  --clr-deep:         #E0DFD8;
+  --clr-deeper:       #D8D7D0;
+  --clr-bg-rgb:       245, 244, 240;
+  --clr-text:         #111213;
+  --clr-sub:          #555555;
+  --clr-muted-text:   #777777;
+  --clr-dim:          #BBBBBB;
+  --clr-very-dim:     #CCCCCC;
+  --clr-faint:        #888888;
+  --clr-light:        #444444;
+  --clr-bright:       #333333;
+  --clr-med:          #666666;
+  --clr-border:       rgba(0,0,0,0.1);
+  --clr-border-dim:   rgba(0,0,0,0.08);
+  --clr-border-faint: rgba(0,0,0,0.05);
+  --clr-border-sub:   rgba(0,0,0,0.06);
+  --clr-header:       rgba(245,244,240,0.88);
+  --clr-header-scroll:rgba(245,244,240,0.97);
+  --clr-mobile-menu:  rgba(245,244,240,0.98);
+  --clr-ticker-dim:   rgba(0,0,0,0.22);
+  --clr-glass:        rgba(235,234,228,0.75);
+  --clr-glass-border: rgba(0,0,0,0.06);
+}
+
 @layer base {
   html {
-    background-color: #0B0C0E;
-    color: #ffffff;
+    background-color: var(--clr-bg);
+    color: var(--clr-text);
     font-family: 'Inter Tight', 'Inter', sans-serif;
     scroll-behavior: auto; /* Lenis handles smooth scroll */
+    transition: background-color 0.35s ease, color 0.35s ease;
   }
 
   body {
@@ -20,7 +80,7 @@
   }
 
   ::-webkit-scrollbar { width: 3px; }
-  ::-webkit-scrollbar-track { background: #0B0C0E; }
+  ::-webkit-scrollbar-track { background: var(--clr-bg); }
   ::-webkit-scrollbar-thumb { background: #D4AF37; border-radius: 2px; }
 }
 
@@ -53,10 +113,10 @@
 
   /* Glass card */
   .glass {
-    background: rgba(22, 23, 24, 0.75);
+    background: var(--clr-glass);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--clr-glass-border);
   }
 
   /* Gold glow button */

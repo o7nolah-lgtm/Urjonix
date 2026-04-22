@@ -4,11 +4,11 @@ export function ProcessCard({ step, title, description, icon, delay = 0 }) {
       class="gsap-hidden"
       data-delay={delay}
       style={{
-        background: '#161718',
-        border: '1px solid rgba(161,161,161,0.1)',
+        background: 'var(--clr-surf)',
+        border: '1px solid var(--clr-border)',
         padding: '2.5rem 2rem',
         position: 'relative',
-        transition: 'border-color 0.3s ease, transform 0.3s ease',
+        transition: 'border-color 0.3s ease, transform 0.3s ease, background 0.35s ease',
         cursor: 'default',
       }}
       onMouseEnter={e => {
@@ -16,7 +16,7 @@ export function ProcessCard({ step, title, description, icon, delay = 0 }) {
         e.currentTarget.style.transform   = 'translateY(-4px)'
       }}
       onMouseLeave={e => {
-        e.currentTarget.style.borderColor = 'rgba(161,161,161,0.1)'
+        e.currentTarget.style.borderColor = 'var(--clr-border)'
         e.currentTarget.style.transform   = 'translateY(0)'
       }}
     >
@@ -37,7 +37,7 @@ export function ProcessCard({ step, title, description, icon, delay = 0 }) {
         {String(step).padStart(2, '0')}
       </div>
 
-      {/* Gold accent top bar */}
+      {/* Gold accent bar */}
       <div
         style={{
           position: 'absolute',
@@ -86,7 +86,7 @@ export function ProcessCard({ step, title, description, icon, delay = 0 }) {
           fontFamily: '"Inter Tight", sans-serif',
           fontWeight: 700,
           fontSize: '1.2rem',
-          color: '#ffffff',
+          color: 'var(--clr-text)',
           marginBottom: '0.75rem',
           letterSpacing: '-0.01em',
         }}
@@ -95,7 +95,7 @@ export function ProcessCard({ step, title, description, icon, delay = 0 }) {
       </h3>
 
       {/* Description */}
-      <p style={{ fontSize: '0.85rem', color: '#A1A1A1', lineHeight: 1.75 }}>
+      <p style={{ fontSize: '0.85rem', color: 'var(--clr-sub)', lineHeight: 1.75 }}>
         {description}
       </p>
     </div>
