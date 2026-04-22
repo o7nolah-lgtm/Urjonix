@@ -3,7 +3,6 @@ import { Router, Route, Switch, useLocation } from 'wouter'
 import Lenis from 'lenis'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { ThemeProvider } from './context/ThemeContext.jsx'
 import { Header } from './components/Header.jsx'
 import { Footer } from './components/Footer.jsx'
 import { LoadingBar } from './components/LoadingBar.jsx'
@@ -41,29 +40,27 @@ export function App() {
   }, [])
 
   return (
-    <ThemeProvider>
-      <div class="bg-urj-black min-h-screen font-inter">
-        <LoadingBar />
-        <Header />
-        <Router>
-          <ScrollToTop />
-          <Switch>
-            <Route path="/" component={Home} />
-            <Route path="/capabilities" component={Capabilities} />
-            <Route path="/case-study" component={CaseStudy} />
-            <Route path="/contact" component={Contact} />
-            <Route>
-              <div class="flex items-center justify-center min-h-screen">
-                <div class="text-center">
-                  <p class="mono-label mb-4">404 — NOT FOUND</p>
-                  <a href="/" class="btn-gold inline-block">Return Home</a>
-                </div>
+    <div class="bg-urj-black min-h-screen font-inter">
+      <LoadingBar />
+      <Header />
+      <Router>
+        <ScrollToTop />
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/capabilities" component={Capabilities} />
+          <Route path="/case-study" component={CaseStudy} />
+          <Route path="/contact" component={Contact} />
+          <Route>
+            <div class="flex items-center justify-center min-h-screen">
+              <div class="text-center">
+                <p class="mono-label mb-4">404 — NOT FOUND</p>
+                <a href="/" class="btn-gold inline-block">Return Home</a>
               </div>
-            </Route>
-          </Switch>
-        </Router>
-        <Footer />
-      </div>
-    </ThemeProvider>
+            </div>
+          </Route>
+        </Switch>
+      </Router>
+      <Footer />
+    </div>
   )
 }

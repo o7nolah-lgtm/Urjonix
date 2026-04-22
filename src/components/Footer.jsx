@@ -1,17 +1,14 @@
 import { Link } from 'wouter'
-import { useTheme } from '../context/ThemeContext.jsx'
 
 export function Footer() {
   const year = new Date().getFullYear()
-  const { isDark } = useTheme()
 
   return (
     <footer
       style={{
-        borderTop: '1px solid var(--clr-border)',
-        background: 'var(--clr-bg)',
+        borderTop: '1px solid rgba(161,161,161,0.1)',
+        background: '#0B0C0E',
         padding: '4rem 2rem 2.5rem',
-        transition: 'background 0.35s ease',
       }}
     >
       <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
@@ -33,14 +30,7 @@ export function Footer() {
                 marginBottom: '1rem',
               }}
             >
-              <img
-                src="/logo.png"
-                alt="Urjionix logo"
-                style={{
-                  width: '36px', height: '36px', objectFit: 'contain',
-                  mixBlendMode: isDark ? 'lighten' : 'multiply',
-                }}
-              />
+              <img src="/logo.png" alt="Urjionix logo" style={{ width: '36px', height: '36px', objectFit: 'contain', mixBlendMode: 'lighten' }} />
               <span
                 style={{
                   fontFamily: '"Inter Tight", sans-serif',
@@ -61,13 +51,13 @@ export function Footer() {
                 fontFamily: '"JetBrains Mono", monospace',
                 fontSize: '0.65rem',
                 letterSpacing: '0.15em',
-                color: 'var(--clr-muted-text)',
+                color: '#6C6C6C',
                 marginBottom: '1rem',
               }}
             >
               AI · ROBOTICS · EDGE
             </p>
-            <p style={{ fontSize: '0.8rem', color: 'var(--clr-muted-text)', lineHeight: 1.7, maxWidth: '260px' }}>
+            <p style={{ fontSize: '0.8rem', color: '#6C6C6C', lineHeight: 1.7, maxWidth: '260px' }}>
               AI and Robotics company building intelligent systems — from edge vision to autonomous machines.
             </p>
           </div>
@@ -98,12 +88,12 @@ export function Footer() {
                   display: 'block',
                   marginBottom: '0.7rem',
                   fontSize: '0.82rem',
-                  color: 'var(--clr-sub)',
+                  color: '#A1A1A1',
                   textDecoration: 'none',
                   transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => e.target.style.color = '#D4AF37'}
-                onMouseLeave={e => e.target.style.color = 'var(--clr-sub)'}
+                onMouseLeave={e => e.target.style.color = '#A1A1A1'}
               >
                 {label}
               </Link>
@@ -133,14 +123,14 @@ export function Footer() {
             ].map(({ label, href, external }) => (
               external
                 ? <a key={href} href={href} target="_blank" rel="noopener noreferrer"
-                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: 'var(--clr-sub)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: '#A1A1A1', textDecoration: 'none', transition: 'color 0.2s' }}
                     onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
-                    onMouseLeave={e => e.currentTarget.style.color = 'var(--clr-sub)'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
                   >{label}</a>
                 : <a key={href} href={href}
-                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: 'var(--clr-sub)', textDecoration: 'none', transition: 'color 0.2s' }}
+                    style={{ display: 'block', marginBottom: '0.7rem', fontSize: '0.82rem', color: '#A1A1A1', textDecoration: 'none', transition: 'color 0.2s' }}
                     onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
-                    onMouseLeave={e => e.currentTarget.style.color = 'var(--clr-sub)'}
+                    onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
                   >{label}</a>
             ))}
           </div>
@@ -160,17 +150,17 @@ export function Footer() {
               Contact
             </p>
             {[
-              { label: 'contact@urjionixtechnologies.com', href: 'mailto:contact@urjionixtechnologies.com' },
-              { label: '+91 8076569592',                   href: 'https://wa.me/918076569592' },
-              { label: 'India',                            href: 'https://maps.google.com/?q=India' },
+              { label: 'contact@urjionixtechnologies.com',      href: 'mailto:contact@urjionixtechnologies.com' },
+              { label: '+91 8076569592',            href: 'https://wa.me/918076569592' },
+              { label: 'India',                      href: 'https://maps.google.com/?q=India' },
             ].map(({ label, href }) => (
               <a key={href} href={href} target="_blank" rel="noopener noreferrer"
                 style={{
-                  display: 'block', fontSize: '0.82rem', color: 'var(--clr-sub)',
+                  display: 'block', fontSize: '0.82rem', color: '#A1A1A1',
                   marginBottom: '0.6rem', textDecoration: 'none', transition: 'color 0.2s',
                 }}
                 onMouseEnter={e => e.currentTarget.style.color = '#D4AF37'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--clr-sub)'}
+                onMouseLeave={e => e.currentTarget.style.color = '#A1A1A1'}
               >
                 {label}
               </a>
@@ -181,7 +171,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div
           style={{
-            borderTop: '1px solid var(--clr-border-dim)',
+            borderTop: '1px solid rgba(161,161,161,0.08)',
             paddingTop: '2rem',
             display: 'flex',
             justifyContent: 'space-between',
@@ -195,7 +185,7 @@ export function Footer() {
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '0.6rem',
               letterSpacing: '0.12em',
-              color: 'var(--clr-dim)',
+              color: '#3C3C3C',
             }}
           >
             © {year} URJIONIX TECHNOLOGIES PVT LTD — ALL RIGHTS RESERVED
@@ -205,7 +195,7 @@ export function Footer() {
               fontFamily: '"JetBrains Mono", monospace',
               fontSize: '0.6rem',
               letterSpacing: '0.12em',
-              color: 'var(--clr-dim)',
+              color: '#3C3C3C',
             }}
           >
             AI · ROBOTICS · EDGE COMPUTE · COMPUTER VISION
